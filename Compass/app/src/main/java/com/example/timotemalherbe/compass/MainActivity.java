@@ -1,6 +1,5 @@
 package com.example.timotemalherbe.compass;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.hardware.Sensor;
@@ -23,7 +22,7 @@ import android.util.Log;
 
 public class MainActivity extends AppCompatActivity {
 
-   // private float currentDegree;
+    private float currentDegree;
 
     // device sensor manager
     //private SensorManager mSensorManager;
@@ -35,30 +34,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //currentDegree=mSensorManager.getDefaultSensor();
-        }
-        //tvHeading = (TextView) findViewById(R.id.textView);
-/*
+        currentDegree=mSensorManager.getDefaultSensor()
+
+        tvHeading = (TextView) findViewById(R.id.textView);
+
         // initialize your android device sensor capabilities
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-        // Get the directory for the user's public pictures directory.
-        final File path =
-                Environment.getExternalStoragePublicDirectory
-                        (
-                                //Environment.DIRECTORY_PICTURES
-                                Environment.DIRECTORY_DCIM + "/root/"
-                        );
+        writeToFile();
+    }
 
-        // Make sure the path directory exists.
-        if(!path.exists())
-        {
-            // Make it, if it doesn't exist
-            path.mkdirs();
-        }
-
-        final File file = new File(path,"mesuh.txt");//My Files/Internal storage/Documents
-
+    public void writeToFile(){
         try {
 
             file.createNewFile();
@@ -106,19 +92,19 @@ public class MainActivity extends AppCompatActivity {
                 catch (IOException e) {
                     Log.e("Exception", "File write failed: " + e.toString());
 
-                }
+                }*/
 
                 h.postDelayed(this, 1000);
             }
         }, 1000);
-    }*/
-    /*
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
 
         // for the system's orientation sensor registered listeners
-        //mSensorManager.registerListener(this, mSensorManager.getOrientation(), SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, mSensorManager.getOrientation(), SensorManager.SENSOR_DELAY_GAME);
     }
 
     protected void onPause() {
