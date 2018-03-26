@@ -13,7 +13,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/ajouterobstacle"
         android:layout_marginTop="10dp"
-        android:text="Commencer" />
+        android:text="Commencer"
+        android:onClick="commencer"/>
 
     <Button
         android:id="@+id/ajouterobstacle"
@@ -30,7 +31,8 @@
         android:layout_height="50dp"
         android:layout_below="@+id/ajouterobstacle"
         android:layout_centerHorizontal="true"
-        android:text="Finir Parcours" />
+        android:text="Finir Parcours"
+        android:onClick="terminer"/>
 
     <ListView
         android:id="@+id/listView"
