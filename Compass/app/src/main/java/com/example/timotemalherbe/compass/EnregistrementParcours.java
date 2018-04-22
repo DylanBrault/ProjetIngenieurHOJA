@@ -188,7 +188,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         mListView = findViewById(R.id.listView);
         Obstacle oVerticaux=new Obstacle(0,"Obstacles verticaux :","Constituants un plan vertical pouvant atteindre 1m60 de haut. Il existe différents types : droits, barrières, murs, palanques.");
         Obstacle oLarges=new Obstacle(1,"Obstacles larges : ","Construits sur le plan horizontal et vertical. Ils peuvent être larges de 2m. Egalement, il existe plusieurs types : oxers, spas (en forme de A).");
-        Obstacle oVolee=new Obstacle(2,"Obstacles larges : ","Ces obstacles souvent très larges nécessitent de la vitesse. Taille ? On distingue les rivières les bull-finches et certains spas.");
+        Obstacle oVolee=new Obstacle(2,"Obstacles de volée : ","Ces obstacles souvent très larges nécessitent de la vitesse. Taille ? On distingue les rivières les bull-finches et certains spas.");
         Obstacle oNaturels=new Obstacle(3,"Obstacles naturels : ","Ils sont propres au terrain et exploitent le relief de celui-ci. Ainsi, on peut rencontrer des bidets, des troncs, des trous, des talus, des contre hauts et contre bas.");
         obstacles.add(oVerticaux);
         obstacles.add(oLarges);
@@ -221,10 +221,10 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
             float angle = event.values[0];
             mAngles.add(event.values[0]);
             // x = (int) (x + Math.cos((event.values[0]- (float) mAngles.get(0))*2*Math.PI/360) * dist);
-            x = (int) (x - Math.cos((event.values[0]) * 2 * Math.PI / 360) * stepLength);
+            x = (int) (x + Math.sin((event.values[0]) * 2 * Math.PI / 360) * stepLength);
             mXArrayList.add(x);
             // y = (int) (y + Math.sin((event.values[0]- (float) mAngles.get(0))*2*Math.PI/360) * dist);
-            y = (int) (y - Math.sin((event.values[0]) * 2 * Math.PI / 360) * stepLength);
+            y = (int) (y + Math.cos((event.values[0]) * 2 * Math.PI / 360) * stepLength);
             mYArrayList.add(y);
             pasDetecte = false;
         }
