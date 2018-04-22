@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,18 +21,37 @@ import com.example.timotemalherbe.compass.EnregistrementParcours;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Random;
 
 public class Carte extends AppCompatActivity {
 
     ArrayList mPointX;
     ArrayList mPointY;
+    ArrayList mTypeObstacles;
+    ArrayList mObstaclesX;
+    ArrayList mObstaclesY;
+    ArrayList mObstaclesCouleurs;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent=getIntent();
         mPointX=intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_POINTX);
         mPointY=intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_POINTY);
+        mTypeObstacles=intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_TYPEOBSTACLES);
+        mObstaclesX=intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_OBSTACLESX);
+        mObstaclesY=intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_OBSTACLESY);
+        int nombreCouleursObstacles=intent.getIntExtra(EnregistrementParcours.EXTRA_OBSTACLESTYPESNBR,4);
+        mObstaclesCouleurs=new ArrayList();
+        for (int k=0;k<nombreCouleursObstacles;k++){
+            Random rand = new Random();
+            int r=rand.nextInt(256);
+            int g=rand.nextInt(256);
+            int b=rand.nextInt(256);
+            int c= Color.rgb(r,g,b);
+            mObstaclesCouleurs.add(c);
+        }
         setContentView(R.layout.activity_carte);
         ImageView imageView=(ImageView) findViewById(R.id.image);
         Bitmap bitmap = Bitmap.createBitmap(304,304, Bitmap.Config.ARGB_8888);
@@ -58,6 +79,20 @@ public class Carte extends AppCompatActivity {
                 //int y = (int) ((304+((int) Collections.min(mPointY)- (int) mPointY.get(j)) * 304 / ((int) Collections.max(mPointY) - (int) Collections.min(mPointY))));
                 canvas.drawCircle(y, x, 3, paint);
                 paint.setColor(Color.BLACK);
+            }
+        }
+        for (int i=0;i<mObstaclesX.size();i++) {
+            int typeObstacle= (int) mTypeObstacles.get(i);
+            paint.setColor((Integer) mObstaclesCouleurs.get(typeObstacle));
+            if ((int)Collections.max(mObstaclesX)-(int)Collections.min(mPointX)==0 ||(int)Collections.max(mPointY)-(int)Collections.min(mPointY)==0){
+                canvas.drawCircle(0, 304, 3, paint);
+            }else {
+                int x = (int) (((int) mObstaclesX.get(i) - (int) Collections.min(mPointX)) * 304 / ((int) Collections.max(mPointX) - (int) Collections.min(mPointX)));
+                int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mObstaclesY.get(i)) * 304 / ((int) Collections.max(mPointY) - (int) Collections.min(mPointY))));
+                // test
+                //int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / ((int) Collections.max(mPointX) - (int) Collections.min(mPointX)));
+                //int y = (int) ((304+((int) Collections.min(mPointY)- (int) mPointY.get(j)) * 304 / ((int) Collections.max(mPointY) - (int) Collections.min(mPointY))));
+                canvas.drawCircle(y, x, 3, paint);
             }
         }
         imageView.setImageBitmap(bitmap);

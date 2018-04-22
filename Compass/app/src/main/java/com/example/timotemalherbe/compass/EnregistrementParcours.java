@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +31,7 @@ import java.util.List;
 public class EnregistrementParcours extends AppCompatActivity implements SensorEventListener {
     File myfile;
     private ListView mListView;
+    private boolean enReconnaissance;
 
     // Champs d'affichage
     TextView nbrPas;
@@ -42,6 +44,12 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
     int nombrePas;
     boolean pasDetecte;
     long time;
+
+    // Champs d'obstacles parcourus
+    ArrayList mObstaclesX;
+    ArrayList mObstaclesY;
+    ArrayList mTypeObstacles;
+    List<Obstacle> obstacles = new ArrayList<Obstacle>();
 
     // Champs de capteurs
     private SensorManager mSensorManager;
@@ -57,6 +65,10 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
     int y; //yActuel
     public static final String EXTRA_POINTX = "com.example.timotemalherbe.POINTX";
     public static final String EXTRA_POINTY = "com.example.timotemalherbe.POINTY";
+    public static final String EXTRA_TYPEOBSTACLES = "com.example.timotemalherbe.TYPEOBSTACLES";
+    public static final String EXTRA_OBSTACLESX = "com.example.timotemalherbe.OBSTACLESX";
+    public static final String EXTRA_OBSTACLESY = "com.example.timotemalherbe.OBSTACLESY";
+    public static final String EXTRA_OBSTACLESTYPESNBR="com.example.timotemalherbe.OBSTACLESTYPESNBR";
     //TextView tvHeading;
 
     @Override
@@ -64,6 +76,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enregistrement_parcours);
         //tvHeading = (TextView) findViewById(R.id.textView);
+        enReconnaissance=false;
 
         //Initialisation de la longueur d'un pas par popup
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(EnregistrementParcours.this);
@@ -84,6 +97,21 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
                     }
                 });
         alertDialog.show();
+
+        // Gestion de la liste d'obstacles
+        mObstaclesX=new ArrayList();
+        mObstaclesY=new ArrayList();
+        mTypeObstacles=new ArrayList();
+        mListView=findViewById(R.id.listView);
+        mListView.setClickable(true);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                mTypeObstacles.add(obstacles.get(i).getImage_obstacle());
+                mObstaclesX.add(x);
+                mObstaclesY.add(y);
+            }
+        });
 
         //Initialisation des mesures
         nombrePas=0;
@@ -116,7 +144,6 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
 
         mSensorManager.registerListener( this,mBoussoleSensor,SensorManager.SENSOR_DELAY_FASTEST);
         mSensorManager.registerListener( this,mStepCounterSensor,SensorManager.SENSOR_DELAY_FASTEST);
-
 
         //Initialisation de l'écriture dans un fichier
         final File path = Environment.getExternalStoragePublicDirectory("/HOP_app/");
@@ -159,9 +186,14 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
 
         //Initialization of the ViewHolder
         mListView = findViewById(R.id.listView);
-
-        List<Obstacle> obstacles = null;
-
+        Obstacle oVerticaux=new Obstacle(0,"Obstacles verticaux :","Constituants un plan vertical pouvant atteindre 1m60 de haut. Il existe différents types : droits, barrières, murs, palanques.");
+        Obstacle oLarges=new Obstacle(1,"Obstacles larges : ","Construits sur le plan horizontal et vertical. Ils peuvent être larges de 2m. Egalement, il existe plusieurs types : oxers, spas (en forme de A).");
+        Obstacle oVolee=new Obstacle(2,"Obstacles larges : ","Ces obstacles souvent très larges nécessitent de la vitesse. Taille ? On distingue les rivières les bull-finches et certains spas.");
+        Obstacle oNaturels=new Obstacle(3,"Obstacles naturels : ","Ils sont propres au terrain et exploitent le relief de celui-ci. Ainsi, on peut rencontrer des bidets, des troncs, des trous, des talus, des contre hauts et contre bas.");
+        obstacles.add(oVerticaux);
+        obstacles.add(oLarges);
+        obstacles.add(oVolee);
+        obstacles.add(oNaturels);
         if (obstacles!=null){
             ObstacleViewAdapter adapter = new ObstacleViewAdapter(EnregistrementParcours.this, obstacles);
             mListView.setAdapter(adapter);
@@ -173,7 +205,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         Sensor sensor = event.sensor;
         float[] values = new float[3];
 
-        if (sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+        if (sensor.getType() == Sensor.TYPE_STEP_COUNTER && enReconnaissance) {
             nombrePas += 1;
             nbrPas.setText("Nombre de pas : " + nombrePas);
             distTot+=stepLength;
@@ -247,21 +279,55 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
     }
 
     public void commencer(View view) {
-        //Commencer l'activité reconnaissance en background
-
+        //Commencer l'activité reconnaissance
+        enReconnaissance=!enReconnaissance;
     }
 
     public void terminer(View view) {
         Intent intent = new Intent(this, Carte.class);
         intent.putExtra(EXTRA_POINTX, mXArrayList);
         intent.putExtra(EXTRA_POINTY, mYArrayList);
+        intent.putExtra(EXTRA_TYPEOBSTACLES, mTypeObstacles);
+        intent.putExtra(EXTRA_OBSTACLESX,mObstaclesX);
+        intent.putExtra(EXTRA_OBSTACLESY,mObstaclesY);
+        intent.putExtra(EXTRA_OBSTACLESTYPESNBR,obstacles.size());
         startActivity(intent);
     }
 
     public void ajouterObstacle(View view) {
-        //Mettre en pause l'activité reconnaissance
-        //Afficher un popup de choix d'obstacle
-        //Ajouter un item à la liste avec la distance par rapport à l'obstacle précédent et type d'obstacle
-        //Puis resume l'activité reconnaissance avec deuxième popup de "reprise" de la reconnaissance
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(EnregistrementParcours.this);
+        alertDialog.setTitle("Ajouter un nouvel obstacle");
+        alertDialog.setMessage("Entrez le nom du nouvel obstacle");
+        final EditText input = new EditText(EnregistrementParcours.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+
+        alertDialog.setNeutralButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(EnregistrementParcours.this);
+                        alertDialog2.setTitle("Ajouter un nouvel obstacle");
+                        alertDialog2.setMessage("Entrez un descriptif du nouvel obstacle");
+                        final EditText input2 = new EditText(EnregistrementParcours.this);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT);
+                        input2.setLayoutParams(lp);
+                        alertDialog2.setView(input2);
+                        alertDialog2.setNeutralButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Obstacle o=new Obstacle(obstacles.size(),input.getText().toString(),input2.getText().toString());
+                                        obstacles.add(o);
+                                    }
+                                }
+                        );
+                        alertDialog2.show();
+                    }
+                });
+        alertDialog.show();
     }
 }

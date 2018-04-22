@@ -12,6 +12,7 @@ public class Obstacle {
     public Obstacle(int image, String pseudo, String text) {
         this.type_obstacle = pseudo;
         this.distance_obstacle = text;
+        this.image_obstacle=image;
     }
 
     public void setType_obstacle(String type_obstacle){
