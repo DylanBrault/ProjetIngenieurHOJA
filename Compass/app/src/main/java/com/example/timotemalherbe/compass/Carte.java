@@ -6,13 +6,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
-//import android.support.design.widget.FloatingActionButton;
-//import android.support.design.widget.Snackbar;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.example.timotemalherbe.compass.EnregistrementParcours;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,27 +29,33 @@ public class Carte extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent=getIntent();
-        mPointX=intent.getIntegerArrayListExtra(Reconnaissance.EXTRA_POINTX);
-        mPointY=intent.getIntegerArrayListExtra(Reconnaissance.EXTRA_POINTY);
+        mPointX=intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_POINTX);
+        mPointY=intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_POINTY);
         setContentView(R.layout.activity_carte);
         ImageView imageView=(ImageView) findViewById(R.id.image);
         Bitmap bitmap = Bitmap.createBitmap(304,304, Bitmap.Config.ARGB_8888);
+        int facteur=Math.max(((int) Collections.max(mPointX) - (int) Collections.min(mPointX))/304+1,((int) Collections.max(mPointY) - (int) Collections.min(mPointY))/304+1);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.BLACK);
-        for (int j=0;j<mPointX.size();j++){
-            if (j==0){
+        for (int j=0;j<mPointX.size();j++) {
+            if (j == 0) {
                 paint.setColor(Color.RED);
             }
-            if (j==mPointX.size()-1){
+            if (j == mPointX.size() - 1) {
                 paint.setColor(Color.BLUE);
             }
+            //canvas.drawCircle(152 * facteur - (int) mPointY.get(j), 152 * facteur + (int) mPointX.get(j), 3, paint);
+            //paint.setColor(Color.BLACK);
             if ((int)Collections.max(mPointX)-(int)Collections.min(mPointX)==0 ||(int)Collections.max(mPointY)-(int)Collections.min(mPointY)==0){
                 canvas.drawCircle(0, 304, 3, paint);
                 paint.setColor(Color.BLACK);
-            }else{
+            }else {
                 int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / ((int) Collections.max(mPointX) - (int) Collections.min(mPointX)));
-                int y = (int) ((304+((int) Collections.min(mPointY)- (int) mPointY.get(j)) * 304 / ((int) Collections.max(mPointY) - (int) Collections.min(mPointY))));
+                int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get(j)) * 304 / ((int) Collections.max(mPointY) - (int) Collections.min(mPointY))));
+                // test
+                //int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / ((int) Collections.max(mPointX) - (int) Collections.min(mPointX)));
+                //int y = (int) ((304+((int) Collections.min(mPointY)- (int) mPointY.get(j)) * 304 / ((int) Collections.max(mPointY) - (int) Collections.min(mPointY))));
                 canvas.drawCircle(y, x, 3, paint);
                 paint.setColor(Color.BLACK);
             }
@@ -55,4 +63,8 @@ public class Carte extends AppCompatActivity {
         imageView.setImageBitmap(bitmap);
     }
 
+    public void accueil(View v){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 }
