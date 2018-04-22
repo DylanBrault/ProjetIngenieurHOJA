@@ -1,5 +1,7 @@
 package com.example.timotemalherbe.compass;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -10,15 +12,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.List;
 
-public class EnregistrementParcours extends AppCompatActivity implements SensorEventListener {
-    //private float currentDegree = 0f;
-    private SensorManager mSensorManager;
+public class EnregistrementParcours extends AppCompatActivity {
     File myfile;
+    private ListView mListView;
+    double stepLength;
     //TextView tvHeading;
 
     @Override
@@ -27,6 +37,27 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         setContentView(R.layout.activity_enregistrement_parcours);
         //tvHeading = (TextView) findViewById(R.id.textView);
 
+        //Initialisation de la longueur d'un pas par popup
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(EnregistrementParcours.this);
+        alertDialog.setTitle("Longueur de pas");
+        alertDialog.setMessage("Entrez la longueur moyenne de pas");
+
+        final EditText input = new EditText(EnregistrementParcours.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+
+        alertDialog.setNeutralButton("OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        stepLength = Double.parseDouble(input.getText().toString());
+                    }
+                });
+
+
+        //Initialisation de l'écriture dans un fichier
         final File path = Environment.getExternalStoragePublicDirectory("/HOP_app/");
         if(!path.exists())//Create directory if non existant
         {
@@ -61,10 +92,17 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         }
 
 
-        // initialize your android device sensor capabilities
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        //Démarrer l'activité reconnaissance et envoyer les données dans writeToFile(String data)
+        //writeToFile(data);
 
-        //writeToFile();
+
+        //Initialization of the ViewHolder
+        mListView = findViewById(R.id.listView);
+
+        List<Obstacle> obstacles = null;
+
+        ObstacleViewAdapter adapter = new ObstacleViewAdapter(EnregistrementParcours.this, obstacles);
+        mListView.setAdapter(adapter);
     }
 
     public void writeToFile(String value){
@@ -81,41 +119,21 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         {ioe.printStackTrace();}
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // for the system's orientation sensor registered listeners
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
-    }
-
-    protected void onPause() {
-        super.onPause();
-
-        // to stop the listener and save battery
-        mSensorManager.unregisterListener(this);
-    }
-
-
-    public void onSensorChanged(SensorEvent event) {
-
-        // get the angle around the z-axis rotated
-        final float degree = Math.round(event.values[0]);
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // not in use
-    }
-
-
     public void commencer(View view) {
-
+        //Commencer l'activité reconnaissance en background
     }
 
     public void terminer(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("FILE_PATH",myfile);
-        startActivity(intent);
+        setResult(RESULT_OK,intent);
+        finish();
+    }
+
+    public void ajouterObstacle(View view) {
+        //Mettre en pause l'activité reconnaissance
+        //Afficher un popup de choix d'obstacle
+        //Ajouter un item à la liste avec la distance par rapport à l'obstacle précédent et type d'obstacle
+        //Puis resume l'activité reconnaissance avec deuxième popup de "reprise" de la reconnaissance
     }
 }

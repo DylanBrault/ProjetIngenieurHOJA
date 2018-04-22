@@ -23,7 +23,8 @@
         android:layout_alignStart="@+id/finparcours"
         android:layout_below="@+id/commencer"
         android:layout_marginTop="1dp"
-        android:text="Ajouter Obstacle" />
+        android:text="Ajouter Obstacle"
+        android:onClick="ajouterObstacle"/>
 
     <Button
         android:id="@+id/finparcours"

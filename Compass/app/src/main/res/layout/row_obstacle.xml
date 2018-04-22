@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView android:id="@+id/image_obstacle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        tools:background="#AAA" />
+
+    <TextView android:id="@+id/type_obstacle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/image_obstacle"
+        android:layout_alignTop="@+id/image_obstacle"
+        android:textStyle="bold"
+        tools:text="Type Obstacle" />
+
+    <TextView android:id="@+id/distance_inter_obstacle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/black"
+        android:layout_alignLeft="@+id/type_obstacle"
+        android:layout_below="@+id/type_obstacle"
+        tools:text="Distance Inter-obstacle" />
+
+
+</LinearLayout>
