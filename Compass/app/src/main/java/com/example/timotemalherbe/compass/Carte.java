@@ -15,15 +15,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-
-import com.example.timotemalherbe.compass.EnregistrementParcours;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class Carte extends AppCompatActivity {
+
 
     ArrayList mPointX;
     ArrayList mPointY;
@@ -98,6 +99,26 @@ public class Carte extends AppCompatActivity {
             }
         }
         imageView.setImageBitmap(bitmap);
+
+        ListView mListView2;
+
+        List<Obstacle> legends= new ArrayList<Obstacle>();
+
+        mListView2 = (ListView) findViewById(R.id.listView2);
+        mListView2.setClickable(false);
+
+        Obstacle oVerticaux=new Obstacle(R.drawable.rouge,"Obstacles verticaux :"," ");
+        Obstacle oLarges=new Obstacle(R.drawable.bleu,"Obstacles larges : "," ");
+        Obstacle oVolee=new Obstacle(R.drawable.vert,"Obstacles de volée : "," ");
+        Obstacle oNaturels=new Obstacle(R.drawable.jaune,"Obstacles naturels : "," ");
+
+        legends.add(oVerticaux);
+        legends.add(oLarges);
+        legends.add(oVolee);
+        legends.add(oNaturels);
+
+        ObstacleViewAdapter adapter2 = new ObstacleViewAdapter(this, legends);
+        mListView2.setAdapter(adapter2);
     }
 
     public void accueil(View v){

@@ -107,7 +107,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mTypeObstacles.add(obstacles.get(i).getImage_obstacle());
+                mTypeObstacles.add(obstacles.get(i).getType_obstacle());
                 mObstaclesX.add(x);
                 mObstaclesY.add(y);
             }
@@ -186,10 +186,10 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
 
         //Initialization of the ViewHolder
         mListView = findViewById(R.id.listView);
-        Obstacle oVerticaux=new Obstacle(0,"Obstacles verticaux :","Constituants un plan vertical pouvant atteindre 1m60 de haut. Il existe différents types : droits, barrières, murs, palanques.");
-        Obstacle oLarges=new Obstacle(1,"Obstacles larges : ","Construits sur le plan horizontal et vertical. Ils peuvent être larges de 2m. Egalement, il existe plusieurs types : oxers, spas (en forme de A).");
-        Obstacle oVolee=new Obstacle(2,"Obstacles de volée : ","Ces obstacles souvent très larges nécessitent de la vitesse. Taille ? On distingue les rivières les bull-finches et certains spas.");
-        Obstacle oNaturels=new Obstacle(3,"Obstacles naturels : ","Ils sont propres au terrain et exploitent le relief de celui-ci. Ainsi, on peut rencontrer des bidets, des troncs, des trous, des talus, des contre hauts et contre bas.");
+        Obstacle oVerticaux=new Obstacle(R.drawable.att,"Obstacles verticaux :","Constituants un plan vertical pouvant atteindre 1m60 de haut. Il existe différents types : droits, barrières, murs, palanques.");
+        Obstacle oLarges=new Obstacle(R.drawable.att,"Obstacles larges : ","Construits sur le plan horizontal et vertical. Ils peuvent être larges de 2m. Egalement, il existe plusieurs types : oxers, spas (en forme de A).");
+        Obstacle oVolee=new Obstacle(R.drawable.att,"Obstacles de volée : ","Ces obstacles souvent très larges nécessitent de la vitesse. Taille ? On distingue les rivières les bull-finches et certains spas.");
+        Obstacle oNaturels=new Obstacle(R.drawable.att,"Obstacles naturels : ","Ils sont propres au terrain et exploitent le relief de celui-ci. Ainsi, on peut rencontrer des bidets, des troncs, des trous, des talus, des contre hauts et contre bas.");
         obstacles.add(oVerticaux);
         obstacles.add(oLarges);
         obstacles.add(oVolee);
@@ -320,7 +320,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
                         alertDialog2.setNeutralButton("OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Obstacle o=new Obstacle(obstacles.size(),input.getText().toString(),input2.getText().toString());
+                                        Obstacle o=new Obstacle(R.drawable.att,input.getText().toString(),input2.getText().toString());
                                         obstacles.add(o);
                                     }
                                 }

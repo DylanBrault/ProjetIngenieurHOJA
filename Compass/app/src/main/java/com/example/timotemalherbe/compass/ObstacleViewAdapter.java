@@ -40,7 +40,7 @@ public class ObstacleViewAdapter extends ArrayAdapter<Obstacle> {
 
         viewHolder.type_obstacle.setText(obstacle.getType_obstacle());
         viewHolder.distance_obstacle.setText(obstacle.getDistance_obstacle());
-        //viewHolder.image_obstacle.setImageDrawable(obstacle.get);
+        viewHolder.image_obstacle.setImageResource(obstacle.getImage_obstacle());
 
         return convertView;
     }
