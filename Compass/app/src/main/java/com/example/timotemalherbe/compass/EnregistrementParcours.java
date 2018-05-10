@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -75,6 +76,10 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         setContentView(R.layout.activity_enregistrement_parcours);
         //tvHeading = (TextView) findViewById(R.id.textView);
         enReconnaissance=false;
+
+        //afficher le clavier automatiquement
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
         //Initialisation de la longueur d'un pas par popup
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(EnregistrementParcours.this);

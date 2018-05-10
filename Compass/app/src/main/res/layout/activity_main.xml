@@ -9,16 +9,16 @@
     <Button
         android:id="@+id/buttonParc"
         android:layout_width="match_parent"
-        android:layout_height="115dp"
+        android:layout_height="143dp"
         android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/imageView3"
         android:onClick="EnregistrerParcours"
         android:text="Enregistrer un parcours" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="match_parent"
-        android:layout_height="88dp"
+        android:layout_height="128dp"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/buttonParc"
         android:text="Commencer la course" />
@@ -26,11 +26,11 @@
     <Button
         android:id="@+id/button3"
         android:layout_width="377dp"
-        android:layout_height="37dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:onClick="Credit"
-        android:text="Crédit" />
+        android:text="Crédits" />
 
     <ImageView
         android:id="@+id/imageView3"

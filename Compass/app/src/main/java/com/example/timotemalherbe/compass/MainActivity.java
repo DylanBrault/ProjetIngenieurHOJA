@@ -30,12 +30,6 @@ public class MainActivity extends AppCompatActivity {
     public void Credit(View view){
         Intent intent = new Intent(MainActivity.this, credit.class);
         startActivity(intent);
-/*        Intent intent = new Intent(this, credit.class);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        // Set your required file type
-        intent.setType("*//*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "credit"),1001);*/
     }
 
 
