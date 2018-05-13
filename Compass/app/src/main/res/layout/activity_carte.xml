@@ -24,7 +24,7 @@
         android:layout_width="51dp"
         android:layout_height="64dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="104dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_editor_absoluteX="317dp"
@@ -37,38 +37,44 @@
         android:layout_height="44dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="44dp"
         android:text="Carte du parcours"
         android:textSize="25dp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintHorizontal_bias="0.34"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="360dp"
-        android:layout_height="300dp"
+        android:layout_width="304dp"
+        android:layout_height="304dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@android:color/background_light"
         app:layout_constraintBottom_toTopOf="@+id/listView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@android:color/white" />
+        app:srcCompat="@android:color/background_light" />
 
-    <ListView
-        android:id="@+id/listView2"
-        android:layout_width="368dp"
-        android:layout_height="107dp"
-        android:layout_marginBottom="8dp"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="400dp"
+        android:layout_height="56dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/Accueil"
+        android:background="#ff5500"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:title="HOJA"
+        app:titleMarginStart="30dp"
+        tools:layout_editor_absoluteY="0dp" />
 
 </android.support.constraint.ConstraintLayout>

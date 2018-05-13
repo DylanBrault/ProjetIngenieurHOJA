@@ -16,22 +16,31 @@ public class MainActivity extends AppCompatActivity {
     ArrayList mTypeObstacles;
     ArrayList mObstaclesX;
     ArrayList mObstaclesY;
-    ArrayList mObstaclesCouleurs;
     ArrayList mNumerosObstacles;
     double stepLength;
+    int nombreCouleursObstacles;
+
+    public static final String EXTRA_POINTX = "com.example.timotemalherbe.POINTX";
+    public static final String EXTRA_POINTY = "com.example.timotemalherbe.POINTY";
+    public static final String EXTRA_TYPEOBSTACLES = "com.example.timotemalherbe.TYPEOBSTACLES";
+    public static final String EXTRA_OBSTACLESX = "com.example.timotemalherbe.OBSTACLESX";
+    public static final String EXTRA_OBSTACLESY = "com.example.timotemalherbe.OBSTACLESY";
+    public static final String EXTRA_NUMEROSOBSTACLES = "com.example.timotemalherbe.NUMEROSOBSTACLES";
+    public static final String EXTRA_DISTANCE="com.example.timotemalherbe.DISTANCE";
+    public static final String EXTRA_OBSTACLESTYPESNBR="com.example.timotemalherbe.OBSTACLESTYPESNBR";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        mPointX = intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_POINTX);
-        mPointY = intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_POINTY);
-        mTypeObstacles = intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_TYPEOBSTACLES);
-        mObstaclesX = intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_OBSTACLESX);
-        mObstaclesY = intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_OBSTACLESY);
-        int nombreCouleursObstacles=intent.getIntExtra(EnregistrementParcours.EXTRA_OBSTACLESTYPESNBR,4);
-        mNumerosObstacles = intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_NUMEROSOBSTACLES);
-        stepLength=intent.getDoubleExtra(EnregistrementParcours.EXTRA_DISTANCE,0.0);
+        mPointX = intent.getIntegerArrayListExtra(Carte.EXTRA_POINTX);
+        mPointY = intent.getIntegerArrayListExtra(Carte.EXTRA_POINTY);
+        mTypeObstacles = intent.getIntegerArrayListExtra(Carte.EXTRA_TYPEOBSTACLES);
+        mObstaclesX = intent.getIntegerArrayListExtra(Carte.EXTRA_OBSTACLESX);
+        mObstaclesY = intent.getIntegerArrayListExtra(Carte.EXTRA_OBSTACLESY);
+        nombreCouleursObstacles=intent.getIntExtra(Carte.EXTRA_OBSTACLESTYPESNBR,4);
+        mNumerosObstacles = intent.getIntegerArrayListExtra(Carte.EXTRA_NUMEROSOBSTACLES);
+        stepLength=intent.getDoubleExtra(Carte.EXTRA_DISTANCE,0.0);
         setContentView(R.layout.activity_main);
     }
 
@@ -42,6 +51,25 @@ public class MainActivity extends AppCompatActivity {
         intent.setType("*/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Enregistrement"),1001);
+    }
+
+    public void CommencerCourse(View view) {
+        if (mPointX !=null) {
+            Intent intent = new Intent(this, Course.class);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            // Set your required file type
+            intent.setType("*/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.putExtra(EXTRA_POINTX, mPointX);
+            intent.putExtra(EXTRA_POINTY, mPointY);
+            intent.putExtra(EXTRA_TYPEOBSTACLES, mTypeObstacles);
+            intent.putExtra(EXTRA_OBSTACLESX,mObstaclesX);
+            intent.putExtra(EXTRA_OBSTACLESY,mObstaclesY);
+            intent.putExtra(EXTRA_NUMEROSOBSTACLES,mNumerosObstacles);
+            intent.putExtra(EXTRA_DISTANCE,stepLength);
+            intent.putExtra(EXTRA_OBSTACLESTYPESNBR,nombreCouleursObstacles);
+            startActivityForResult(Intent.createChooser(intent, "Course"), 1001);
+        }
     }
 
 

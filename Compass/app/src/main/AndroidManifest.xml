@@ -24,6 +24,10 @@
             android:label="@string/title_activity_carte"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".credit" />
+        <activity
+            android:name=".Course"
+            android:label="@string/title_activity_course"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
