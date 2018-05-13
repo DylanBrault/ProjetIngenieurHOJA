@@ -20,6 +20,16 @@ import java.util.Random;
 
 public class Carte extends AppCompatActivity {
 
+    public static final String EXTRA_POINTX = "com.example.timotemalherbe.POINTX";
+    public static final String EXTRA_POINTY = "com.example.timotemalherbe.POINTY";
+    public static final String EXTRA_TYPEOBSTACLES = "com.example.timotemalherbe.TYPEOBSTACLES";
+    public static final String EXTRA_OBSTACLESX = "com.example.timotemalherbe.OBSTACLESX";
+    public static final String EXTRA_OBSTACLESY = "com.example.timotemalherbe.OBSTACLESY";
+    public static final String EXTRA_NUMEROSOBSTACLES = "com.example.timotemalherbe.NUMEROSOBSTACLES";
+    public static final String EXTRA_DISTANCE="com.example.timotemalherbe.DISTANCE";
+
+    int foulee;
+    int distAppel;
 
     ArrayList mPointX;
     ArrayList mPointY;
@@ -27,6 +37,8 @@ public class Carte extends AppCompatActivity {
     ArrayList mObstaclesX;
     ArrayList mObstaclesY;
     ArrayList mObstaclesCouleurs;
+    ArrayList mNumerosObstacles;
+    double stepLength;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -39,6 +51,10 @@ public class Carte extends AppCompatActivity {
         mObstaclesX = intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_OBSTACLESX);
         mObstaclesY = intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_OBSTACLESY);
         int nombreCouleursObstacles=intent.getIntExtra(EnregistrementParcours.EXTRA_OBSTACLESTYPESNBR,4);
+        mNumerosObstacles = intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_NUMEROSOBSTACLES);
+        stepLength=intent.getDoubleExtra(EnregistrementParcours.EXTRA_DISTANCE,0.0);
+        foulee=4;
+        distAppel=2;
         mObstaclesCouleurs = new ArrayList();
         for (int k = 0; k < nombreCouleursObstacles; k++){
             Random rand = new Random();
@@ -93,8 +109,46 @@ public class Carte extends AppCompatActivity {
                 canvas.drawCircle(x, y,3, paint);
             }
         }
-        imageView.setImageBitmap(bitmap);
+        for (int p = 1; p < mNumerosObstacles.size(); p++) {
+            int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
+            int distObst= (int) Math.round(((int) mNumerosObstacles.get(p)-(int) mNumerosObstacles.get(p-1))*stepLength/100);
+            if ((distObst-(distAppel))%foulee==1){ // On accélère
+                paint.setColor(Color.GREEN);
+                if ((int)mNumerosObstacles.get(p)-5>0) {
+                    for (int k=1;k<=5;k++) {
+                        int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p) - k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
+                        int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p) - k)) * 304 / DeltaMax));
+                        canvas.drawCircle(x, y, 3, paint);
+                    }
+                }
+            }else{
+                if ((distObst-distAppel)%foulee==2){ // On ralentit sur 2 foulees
+                    paint.setColor(Color.RED);
+                    if ((int)mNumerosObstacles.get(p-1)+9<(int)mNumerosObstacles.get(p)){
+                        for (int k=1;k<=9;k++) {
+                            int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p-1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
+                            int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p-1) + k)) * 304 / DeltaMax));
+                            canvas.drawCircle(x, y, 3, paint);
+                        }
+                    }
+                }else{
+                    if ((distObst-distAppel)%foulee==3){ // On ralentit sur 1 foulee
+                        paint.setColor(Color.RED);
+                        if ((int)mNumerosObstacles.get(p-1)+5<(int)mNumerosObstacles.get(p)) {
+                            for (int k=1;k<=5;k++) {
+                                int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p-1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
+                                int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p-1) + k)) * 304 / DeltaMax));
+                                canvas.drawCircle(x, y, 3, paint);
+                            }
+                        }
+                    }
+                }
 
+            }
+
+            }
+        imageView.setImageBitmap(bitmap);
+    /*
         ListView mListView2;
 
         List<Obstacle> legends = new ArrayList<Obstacle>();
@@ -114,10 +168,18 @@ public class Carte extends AppCompatActivity {
 
         ObstacleViewAdapter adapter2 = new ObstacleViewAdapter(this, legends);
         mListView2.setAdapter(adapter2);
+        */
     }
 
     public void accueil(View v){
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(EXTRA_POINTX, mPointX);
+        intent.putExtra(EXTRA_POINTY, mPointY);
+        intent.putExtra(EXTRA_TYPEOBSTACLES, mTypeObstacles);
+        intent.putExtra(EXTRA_OBSTACLESX,mObstaclesX);
+        intent.putExtra(EXTRA_OBSTACLESY,mObstaclesY);
+        intent.putExtra(EXTRA_NUMEROSOBSTACLES,mNumerosObstacles);
+        intent.putExtra(EXTRA_DISTANCE,stepLength);
         startActivity(intent);
     }
 }

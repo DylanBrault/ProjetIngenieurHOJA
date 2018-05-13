@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_editor_absoluteX="317dp"
         app:layout_editor_absoluteY="16dp"
-        app:srcCompat="@drawable/nort" />
+        app:srcCompat="@drawable/nord" />
 
     <TextView
         android:id="@+id/textView"

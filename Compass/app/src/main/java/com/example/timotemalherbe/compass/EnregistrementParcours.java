@@ -49,6 +49,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
     ArrayList mObstaclesY;
     ArrayList mTypeObstacles;
     List<Obstacle> obstacles = new ArrayList<Obstacle>();
+    ArrayList mNumerosObstacles;
 
     // Champs de capteurs
     private SensorManager mSensorManager;
@@ -67,7 +68,9 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
     public static final String EXTRA_TYPEOBSTACLES = "com.example.timotemalherbe.TYPEOBSTACLES";
     public static final String EXTRA_OBSTACLESX = "com.example.timotemalherbe.OBSTACLESX";
     public static final String EXTRA_OBSTACLESY = "com.example.timotemalherbe.OBSTACLESY";
+    public static final String EXTRA_NUMEROSOBSTACLES = "com.example.timotemalherbe.NUMEROSOBSTACLES";
     public static final String EXTRA_OBSTACLESTYPESNBR="com.example.timotemalherbe.OBSTACLESTYPESNBR";
+    public static final String EXTRA_DISTANCE="com.example.timotemalherbe.DISTANCE";
     //TextView tvHeading;
 
     @Override
@@ -105,14 +108,16 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         mObstaclesX=new ArrayList();
         mObstaclesY=new ArrayList();
         mTypeObstacles=new ArrayList();
+        mNumerosObstacles=new ArrayList();
         mListView=findViewById(R.id.listView);
         mListView.setClickable(true);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                mTypeObstacles.add(obstacles.get(i).getType_obstacle());
+                mTypeObstacles.add(obstacles.get(i).getTypeObstacleInt());
                 mObstaclesX.add(x);
                 mObstaclesY.add(y);
+                mNumerosObstacles.add(mXArrayList.size()-1);
             }
         });
 
@@ -189,10 +194,10 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
 
         //Initialization of the ViewHolder
         mListView = findViewById(R.id.listView);
-        Obstacle oVerticaux=new Obstacle(R.drawable.att,"Obstacles verticaux :","Constituants un plan vertical pouvant atteindre 1m60 de haut. Il existe différents types : droits, barrières, murs, palanques.");
-        Obstacle oLarges=new Obstacle(R.drawable.att,"Obstacles larges : ","Construits sur le plan horizontal et vertical. Ils peuvent être larges de 2m. Egalement, il existe plusieurs types : oxers, spas (en forme de A).");
-        Obstacle oVolee=new Obstacle(R.drawable.att,"Obstacles de volée : ","Ces obstacles souvent très larges nécessitent de la vitesse. Taille ? On distingue les rivières les bull-finches et certains spas.");
-        Obstacle oNaturels=new Obstacle(R.drawable.att,"Obstacles naturels : ","Ils sont propres au terrain et exploitent le relief de celui-ci. Ainsi, on peut rencontrer des bidets, des troncs, des trous, des talus, des contre hauts et contre bas.");
+        Obstacle oVerticaux=new Obstacle(R.drawable.droit,"Obstacles verticaux :","Constituants un plan vertical pouvant atteindre 1m60 de haut. Il existe différents types : droits, barrières, murs, palanques.",0);
+        Obstacle oLarges=new Obstacle(R.drawable.riviere,"Obstacles larges : ","Construits sur le plan horizontal et vertical. Ils peuvent être larges de 2m. Egalement, il existe plusieurs types : oxers, spas (en forme de A).",1);
+        Obstacle oVolee=new Obstacle(R.drawable.riviere,"Obstacles de volée : ","Ces obstacles souvent très larges nécessitent de la vitesse. Taille ? On distingue les rivières les bull-finches et certains spas.",2);
+        Obstacle oNaturels=new Obstacle(R.drawable.riviere,"Obstacles naturels : ","Ils sont propres au terrain et exploitent le relief de celui-ci. Ainsi, on peut rencontrer des bidets, des troncs, des trous, des talus, des contre hauts et contre bas.",3);
         obstacles.add(oVerticaux);
         obstacles.add(oLarges);
         obstacles.add(oVolee);
@@ -294,6 +299,8 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         intent.putExtra(EXTRA_OBSTACLESX,mObstaclesX);
         intent.putExtra(EXTRA_OBSTACLESY,mObstaclesY);
         intent.putExtra(EXTRA_OBSTACLESTYPESNBR,obstacles.size());
+        intent.putExtra(EXTRA_NUMEROSOBSTACLES,mNumerosObstacles);
+        intent.putExtra(EXTRA_DISTANCE,stepLength);
         startActivity(intent);
     }
 
@@ -323,7 +330,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
                         alertDialog2.setNeutralButton("OK",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        Obstacle o=new Obstacle(R.drawable.att,input.getText().toString(),input2.getText().toString());
+                                        Obstacle o=new Obstacle(R.drawable.att,input.getText().toString(),input2.getText().toString(),obstacles.size());
                                         obstacles.add(o);
                                     }
                                 }

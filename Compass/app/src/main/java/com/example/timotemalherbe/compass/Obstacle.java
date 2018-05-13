@@ -8,11 +8,14 @@ public class Obstacle {
     private String type_obstacle;
     private String distance_obstacle;
     private int image_obstacle;//Ressource à produire pour les images d'obstacles
+    private int numero_obstacle;
+    private int typeObstacleInt;
 
-    public Obstacle(int image, String pseudo, String text) {
+    public Obstacle(int image, String pseudo, String text,int typeObsInt) {
         this.type_obstacle = pseudo;
         this.distance_obstacle = text;
         this.image_obstacle=image;
+        this.typeObstacleInt=typeObsInt;
     }
 
     public void setType_obstacle(String type_obstacle){
@@ -38,4 +41,6 @@ public class Obstacle {
     public int getImage_obstacle() {
         return image_obstacle;
     }
+
+    public int getTypeObstacleInt() {return typeObstacleInt;}
 }
