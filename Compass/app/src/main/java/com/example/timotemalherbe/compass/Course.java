@@ -82,15 +82,15 @@ public class Course extends AppCompatActivity{
             int c = Color.rgb(r, g, b);
             mObstaclesCouleurs.add(c);
         }
-        iv = (ImageView) findViewById(R.id.map);
-        bm = Bitmap.createBitmap(304, 304, Bitmap.Config.RGB_565);
         setContentView(R.layout.activity_course);
         paintMap();
     }
 
-    public void paintMap(){
-        int facteur = Math.max(((int) Collections.max(mPointX) - (int) Collections.min(mPointX))/304+1,((int) Collections.max(mPointY) - (int) Collections.min(mPointY))/304+1);
-        Canvas cs = new Canvas(bm);
+    public void paintMap() {
+        ImageView imageView = (ImageView) findViewById(R.id.map);
+        Bitmap bitmap = Bitmap.createBitmap(304, 304, Bitmap.Config.ARGB_8888);
+        int facteur = Math.max(((int) Collections.max(mPointX) - (int) Collections.min(mPointX)) / 304 + 1, ((int) Collections.max(mPointY) - (int) Collections.min(mPointY)) / 304 + 1);
+        Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.BLACK);
         for (int j = 0; j < mPointX.size(); j++) {
@@ -100,59 +100,70 @@ public class Course extends AppCompatActivity{
             if (j == mPointX.size() - 1) {
                 paint.setColor(Color.BLUE);
             }
-            int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
-            if ((int)Collections.max(mPointX)-(int)Collections.min(mPointX)==0 ||(int)Collections.max(mPointY)-(int)Collections.min(mPointY)==0){
-                cs.drawCircle(0, 304, 3, paint);
+            //canvas.drawCircle(152 * facteur - (int) mPointY.get(j), 152 * facteur + (int) mPointX.get(j), 3, paint);
+            //paint.setColor(Color.BLACK);
+            int DeltaMax = Math.max((int) Collections.max(mPointX) - (int) Collections.min(mPointX), (int) Collections.max(mPointY) - (int) Collections.min(mPointY));
+            if ((int) Collections.max(mPointX) - (int) Collections.min(mPointX) == 0 || (int) Collections.max(mPointY) - (int) Collections.min(mPointY) == 0) {
+                canvas.drawCircle(0, 304, 1, paint);
                 paint.setColor(Color.BLACK);
-            }else {
+            } else {
                 int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                 int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get(j)) * 304 / DeltaMax));
-                cs.drawCircle(x, y, 3, paint);
+                // test
+                //int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / ((int) Collections.max(mPointX) - (int) Collections.min(mPointX)));
+                //int y = (int) ((304+((int) Collections.min(mPointY)- (int) mPointY.get(j)) * 304 / ((int) Collections.max(mPointY) - (int) Collections.min(mPointY))));
+                canvas.drawCircle(x, y, 1, paint);
                 paint.setColor(Color.BLACK);
             }
         }
         for (int i = 0; i < mObstaclesX.size(); i++) {
             int typeObstacle = (int) mTypeObstacles.get(i);
             paint.setColor((Integer) mObstaclesCouleurs.get(typeObstacle));
-            int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
-            if ((int)Collections.max(mPointX)-(int)Collections.min(mPointX) == 0 ||(int)Collections.max(mPointY)-(int)Collections.min(mPointY)==0){
-                cs.drawCircle(0, 304, 3, paint);
-            }else {
+            int DeltaMax = Math.max((int) Collections.max(mPointX) - (int) Collections.min(mPointX), (int) Collections.max(mPointY) - (int) Collections.min(mPointY));
+            if ((int) Collections.max(mPointX) - (int) Collections.min(mPointX) == 0 || (int) Collections.max(mPointY) - (int) Collections.min(mPointY) == 0) {
+                canvas.drawCircle(0, 304, 1, paint);
+            } else {
                 int x = (int) (((int) mObstaclesX.get(i) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                 int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mObstaclesY.get(i)) * 304 / DeltaMax));
-                cs.drawCircle(x, y,3, paint);
+                // test
+                //int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / ((int) Collections.max(mPointX) - (int) Collections.min(mPointX)));
+                //int y = (int) ((304+((int) Collections.min(mPointY)- (int) mPointY.get(j)) * 304 / ((int) Collections.max(mPointY) - (int) Collections.min(mPointY))));
+                paint.setColor(Color.WHITE);
+                //canvas.drawRect(x-5,y+15,x+15,y+5,paint);
+                paint.setColor(Color.BLUE);
+                canvas.drawText(i + 1 + "", (float) x - 10, (float) y - 10, paint);
             }
         }
         for (int p = 1; p < mNumerosObstacles.size(); p++) {
-            int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
-            int distObst= (int) Math.round(((int) mNumerosObstacles.get(p)-(int) mNumerosObstacles.get(p-1))*stepLength/100);
-            if ((distObst-(distAppel))%foulee==1){ // On accélère
+            int DeltaMax = Math.max((int) Collections.max(mPointX) - (int) Collections.min(mPointX), (int) Collections.max(mPointY) - (int) Collections.min(mPointY));
+            int distObst = (int) Math.round(((int) mNumerosObstacles.get(p) - (int) mNumerosObstacles.get(p - 1)) * stepLength / 100);
+            if ((distObst - (distAppel)) % foulee == 1) { // On accélère
                 paint.setColor(Color.GREEN);
-                if ((int)mNumerosObstacles.get(p)-5>0) {
-                    for (int k=1;k<=5;k++) {
+                if ((int) mNumerosObstacles.get(p) - 5 > 0) {
+                    for (int k = 1; k <= 5; k++) {
                         int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p) - k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                         int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p) - k)) * 304 / DeltaMax));
-                        cs.drawCircle(x, y, 3, paint);
+                        canvas.drawCircle(x, y, 1, paint);
                     }
                 }
-            }else{
-                if ((distObst-distAppel)%foulee==2){ // On ralentit sur 2 foulees
+            } else {
+                if ((distObst - distAppel) % foulee == 2) { // On ralentit sur 2 foulees
                     paint.setColor(Color.RED);
-                    if ((int)mNumerosObstacles.get(p-1)+9<(int)mNumerosObstacles.get(p)){
-                        for (int k=1;k<=9;k++) {
-                            int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p-1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
-                            int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p-1) + k)) * 304 / DeltaMax));
-                            cs.drawCircle(x, y, 3, paint);
+                    if ((int) mNumerosObstacles.get(p - 1) + 9 < (int) mNumerosObstacles.get(p)) {
+                        for (int k = 1; k <= 9; k++) {
+                            int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p - 1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
+                            int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p - 1) + k)) * 304 / DeltaMax));
+                            canvas.drawCircle(x, y, 1, paint);
                         }
                     }
-                }else{
-                    if ((distObst-distAppel)%foulee==3){ // On ralentit sur 1 foulee
+                } else {
+                    if ((distObst - distAppel) % foulee == 3) { // On ralentit sur 1 foulee
                         paint.setColor(Color.RED);
-                        if ((int)mNumerosObstacles.get(p-1)+5<(int)mNumerosObstacles.get(p)) {
-                            for (int k=1;k<=5;k++) {
-                                int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p-1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
-                                int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p-1) + k)) * 304 / DeltaMax));
-                                cs.drawCircle(x, y, 3, paint);
+                        if ((int) mNumerosObstacles.get(p - 1) + 5 < (int) mNumerosObstacles.get(p)) {
+                            for (int k = 1; k <= 5; k++) {
+                                int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p - 1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
+                                int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p - 1) + k)) * 304 / DeltaMax));
+                                canvas.drawCircle(x, y, 1, paint);
                             }
                         }
                     }
@@ -161,6 +172,7 @@ public class Course extends AppCompatActivity{
             }
 
         }
+        imageView.setImageBitmap(bitmap);
     }
 
     public void demarrerCourse(View v){

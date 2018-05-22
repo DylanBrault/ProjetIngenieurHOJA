@@ -86,7 +86,7 @@ public class Carte extends AppCompatActivity {
             //paint.setColor(Color.BLACK);
             int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
             if ((int)Collections.max(mPointX)-(int)Collections.min(mPointX)==0 ||(int)Collections.max(mPointY)-(int)Collections.min(mPointY)==0){
-                canvas.drawCircle(0, 304, 3, paint);
+                canvas.drawCircle(0, 304, 1, paint);
                 paint.setColor(Color.BLACK);
             }else {
                 int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
@@ -94,7 +94,7 @@ public class Carte extends AppCompatActivity {
                 // test
                 //int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / ((int) Collections.max(mPointX) - (int) Collections.min(mPointX)));
                 //int y = (int) ((304+((int) Collections.min(mPointY)- (int) mPointY.get(j)) * 304 / ((int) Collections.max(mPointY) - (int) Collections.min(mPointY))));
-                canvas.drawCircle(x, y, 3, paint);
+                canvas.drawCircle(x, y, 1, paint);
                 paint.setColor(Color.BLACK);
             }
         }
@@ -103,15 +103,17 @@ public class Carte extends AppCompatActivity {
             paint.setColor((Integer) mObstaclesCouleurs.get(typeObstacle));
             int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
             if ((int)Collections.max(mPointX)-(int)Collections.min(mPointX) == 0 ||(int)Collections.max(mPointY)-(int)Collections.min(mPointY)==0){
-                canvas.drawCircle(0, 304, 3, paint);
+                canvas.drawCircle(0, 304, 1, paint);
             }else {
                 int x = (int) (((int) mObstaclesX.get(i) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                 int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mObstaclesY.get(i)) * 304 / DeltaMax));
                 // test
                 //int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / ((int) Collections.max(mPointX) - (int) Collections.min(mPointX)));
                 //int y = (int) ((304+((int) Collections.min(mPointY)- (int) mPointY.get(j)) * 304 / ((int) Collections.max(mPointY) - (int) Collections.min(mPointY))));
-                canvas.drawRect(x-5,y+5,x+15,y-5,new Paint(Color.WHITE));
-                canvas.drawText(i+"",(float)x+10,(float)y,new Paint(Color.BLUE));
+                paint.setColor(Color.WHITE);
+                //canvas.drawRect(x-5,y+15,x+15,y+5,paint);
+                paint.setColor(Color.BLUE);
+                canvas.drawText(i+1+"",(float)x-10,(float)y-10,paint);
             }
         }
         for (int p = 1; p < mNumerosObstacles.size(); p++) {
@@ -123,7 +125,7 @@ public class Carte extends AppCompatActivity {
                     for (int k=1;k<=5;k++) {
                         int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p) - k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                         int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p) - k)) * 304 / DeltaMax));
-                        canvas.drawCircle(x, y, 3, paint);
+                        canvas.drawCircle(x, y, 1, paint);
                     }
                 }
             }else{
@@ -133,7 +135,7 @@ public class Carte extends AppCompatActivity {
                         for (int k=1;k<=9;k++) {
                             int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p-1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                             int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p-1) + k)) * 304 / DeltaMax));
-                            canvas.drawCircle(x, y, 3, paint);
+                            canvas.drawCircle(x, y, 1, paint);
                         }
                     }
                 }else{
@@ -143,7 +145,7 @@ public class Carte extends AppCompatActivity {
                             for (int k=1;k<=5;k++) {
                                 int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p-1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                                 int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p-1) + k)) * 304 / DeltaMax));
-                                canvas.drawCircle(x, y, 3, paint);
+                                canvas.drawCircle(x, y, 1, paint);
                             }
                         }
                     }
