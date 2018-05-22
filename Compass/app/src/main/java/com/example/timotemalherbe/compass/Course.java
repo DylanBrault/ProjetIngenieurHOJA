@@ -85,10 +85,10 @@ public class Course extends AppCompatActivity{
         iv = (ImageView) findViewById(R.id.map);
         bm = Bitmap.createBitmap(304, 304, Bitmap.Config.RGB_565);
         setContentView(R.layout.activity_course);
-        //paintMap(lastObstacle,time);
+        paintMap();
     }
 
-    public void paintMap(int lastObstacle, long time){
+    public void paintMap(){
         int facteur = Math.max(((int) Collections.max(mPointX) - (int) Collections.min(mPointX))/304+1,((int) Collections.max(mPointY) - (int) Collections.min(mPointY))/304+1);
         Canvas cs = new Canvas(bm);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -161,18 +161,6 @@ public class Course extends AppCompatActivity{
             }
 
         }
-        if (time>0 && lastObstacle<mObstaclesX.size()-1){
-            paint.setColor(Color.BLUE);
-            int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
-            float distParcourir=vitesseActuelle/10;
-            if (lastObstacle<mObstaclesX.size()-1 && Math.sqrt(((int)mObstaclesX.get(lastObstacle) - posX) ^ 2 + ((int)mObstaclesY.get(lastObstacle) - posY) ^ 2)<distParcourir)  {
-                distParcourir= (float) (vitesseActuelle/10-Math.sqrt(((int)mObstaclesX.get(lastObstacle) - posX) ^ 2 + ((int)mObstaclesY.get(lastObstacle) - posY) ^ 2));
-                lastObstacle+=1;
-            }
-            int x = (int) (((int) ((int)mObstaclesX.get(lastObstacle)+Math.cos(Math.atan2((int)mObstaclesY.get(lastObstacle+1)-(int)mObstaclesY.get(lastObstacle),(int)mObstaclesX.get(lastObstacle+1)-(int)mObstaclesX.get(lastObstacle)))/distParcourir - (int) Collections.min(mPointX)) * 304 / DeltaMax));
-            int y = (int) ((304 + ((int) Collections.min(mPointY) - ((int) mObstaclesY.get(lastObstacle)+Math.sin(Math.atan2((int)mObstaclesY.get(lastObstacle+1)-(int)mObstaclesY.get(lastObstacle),(int)mObstaclesX.get(lastObstacle+1)-(int)mObstaclesX.get(lastObstacle)))/distParcourir) * 304 / DeltaMax)));
-            cs.drawCircle(x, y, 3, paint);
-        }
     }
 
     public void demarrerCourse(View v){
@@ -181,7 +169,7 @@ public class Course extends AppCompatActivity{
             if (time-oldTime>100){
                 oldTime=time;
                 time=System.currentTimeMillis();
-                iv.setImageBitmap(bm);
+
             }
         }
     }
