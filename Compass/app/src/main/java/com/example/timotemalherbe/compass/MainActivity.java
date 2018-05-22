@@ -56,10 +56,6 @@ public class MainActivity extends AppCompatActivity {
     public void CommencerCourse(View view) {
         if (mPointX !=null) {
             Intent intent = new Intent(this, Course.class);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            // Set your required file type
-            intent.setType("*/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
             intent.putExtra(EXTRA_POINTX, mPointX);
             intent.putExtra(EXTRA_POINTY, mPointY);
             intent.putExtra(EXTRA_TYPEOBSTACLES, mTypeObstacles);
@@ -68,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(EXTRA_NUMEROSOBSTACLES,mNumerosObstacles);
             intent.putExtra(EXTRA_DISTANCE,stepLength);
             intent.putExtra(EXTRA_OBSTACLESTYPESNBR,nombreCouleursObstacles);
-            startActivityForResult(Intent.createChooser(intent, "Course"), 1001);
+            startActivity(intent);
         }
     }
 

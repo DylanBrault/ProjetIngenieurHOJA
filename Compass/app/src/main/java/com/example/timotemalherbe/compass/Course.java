@@ -16,15 +16,10 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class Course extends AppCompatActivity {
-    public static final String EXTRA_POINTX = "com.example.timotemalherbe.POINTX";
-    public static final String EXTRA_POINTY = "com.example.timotemalherbe.POINTY";
-    public static final String EXTRA_TYPEOBSTACLES = "com.example.timotemalherbe.TYPEOBSTACLES";
-    public static final String EXTRA_OBSTACLESX = "com.example.timotemalherbe.OBSTACLESX";
-    public static final String EXTRA_OBSTACLESY = "com.example.timotemalherbe.OBSTACLESY";
-    public static final String EXTRA_NUMEROSOBSTACLES = "com.example.timotemalherbe.NUMEROSOBSTACLES";
-    public static final String EXTRA_DISTANCE="com.example.timotemalherbe.DISTANCE";
+public class Course extends AppCompatActivity{
 
     int foulee;
     int distAppel;
@@ -37,10 +32,20 @@ public class Course extends AppCompatActivity {
     ArrayList mObstaclesCouleurs;
     ArrayList mNumerosObstacles;
     double stepLength;
+    long time;
+    long oldTime;
+    int lastObstacle;
+    int posX;
+    int posY;
 
+    ImageView iv;
+    Bitmap bm;
+
+    //Vitesse en centimètres par seconde
     float vitesseNormale;
     float vitesseLente;
     float vitesseAcceleration;
+    float vitesseActuelle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,15 @@ public class Course extends AppCompatActivity {
         stepLength = intent.getDoubleExtra(MainActivity.EXTRA_DISTANCE, 0.0);
         foulee = 4;
         distAppel = 2;
+        time=0;
+        oldTime=0;
+        lastObstacle=0;
+        posX=0;
+        posY=0;
+        vitesseNormale=3;
+        vitesseLente=0;
+        vitesseAcceleration=0;
+        vitesseActuelle=vitesseNormale;
         mObstaclesCouleurs = new ArrayList();
         for (int k = 0; k < nombreCouleursObstacles; k++) {
             Random rand = new Random();
@@ -68,16 +82,15 @@ public class Course extends AppCompatActivity {
             int c = Color.rgb(r, g, b);
             mObstaclesCouleurs.add(c);
         }
-
+        iv = (ImageView) findViewById(R.id.map);
+        bm = Bitmap.createBitmap(304, 304, Bitmap.Config.RGB_565);
         setContentView(R.layout.activity_course);
-        paintMap();
+        //paintMap(lastObstacle,time);
     }
 
-    public void paintMap(){
-        ImageView imageView = (ImageView) findViewById(R.id.carte);
-        Bitmap bitmap = Bitmap.createBitmap(304, 304, Bitmap.Config.ARGB_8888);
+    public void paintMap(int lastObstacle, long time){
         int facteur = Math.max(((int) Collections.max(mPointX) - (int) Collections.min(mPointX))/304+1,((int) Collections.max(mPointY) - (int) Collections.min(mPointY))/304+1);
-        Canvas canvas = new Canvas(bitmap);
+        Canvas cs = new Canvas(bm);
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.BLACK);
         for (int j = 0; j < mPointX.size(); j++) {
@@ -89,12 +102,12 @@ public class Course extends AppCompatActivity {
             }
             int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
             if ((int)Collections.max(mPointX)-(int)Collections.min(mPointX)==0 ||(int)Collections.max(mPointY)-(int)Collections.min(mPointY)==0){
-                canvas.drawCircle(0, 304, 3, paint);
+                cs.drawCircle(0, 304, 3, paint);
                 paint.setColor(Color.BLACK);
             }else {
                 int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                 int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get(j)) * 304 / DeltaMax));
-                canvas.drawCircle(x, y, 3, paint);
+                cs.drawCircle(x, y, 3, paint);
                 paint.setColor(Color.BLACK);
             }
         }
@@ -103,11 +116,11 @@ public class Course extends AppCompatActivity {
             paint.setColor((Integer) mObstaclesCouleurs.get(typeObstacle));
             int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
             if ((int)Collections.max(mPointX)-(int)Collections.min(mPointX) == 0 ||(int)Collections.max(mPointY)-(int)Collections.min(mPointY)==0){
-                canvas.drawCircle(0, 304, 3, paint);
+                cs.drawCircle(0, 304, 3, paint);
             }else {
                 int x = (int) (((int) mObstaclesX.get(i) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                 int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mObstaclesY.get(i)) * 304 / DeltaMax));
-                canvas.drawCircle(x, y,3, paint);
+                cs.drawCircle(x, y,3, paint);
             }
         }
         for (int p = 1; p < mNumerosObstacles.size(); p++) {
@@ -119,7 +132,7 @@ public class Course extends AppCompatActivity {
                     for (int k=1;k<=5;k++) {
                         int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p) - k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                         int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p) - k)) * 304 / DeltaMax));
-                        canvas.drawCircle(x, y, 3, paint);
+                        cs.drawCircle(x, y, 3, paint);
                     }
                 }
             }else{
@@ -129,7 +142,7 @@ public class Course extends AppCompatActivity {
                         for (int k=1;k<=9;k++) {
                             int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p-1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                             int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p-1) + k)) * 304 / DeltaMax));
-                            canvas.drawCircle(x, y, 3, paint);
+                            cs.drawCircle(x, y, 3, paint);
                         }
                     }
                 }else{
@@ -139,7 +152,7 @@ public class Course extends AppCompatActivity {
                             for (int k=1;k<=5;k++) {
                                 int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p-1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                                 int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p-1) + k)) * 304 / DeltaMax));
-                                canvas.drawCircle(x, y, 3, paint);
+                                cs.drawCircle(x, y, 3, paint);
                             }
                         }
                     }
@@ -148,6 +161,28 @@ public class Course extends AppCompatActivity {
             }
 
         }
-        imageView.setImageBitmap(bitmap);
+        if (time>0 && lastObstacle<mObstaclesX.size()-1){
+            paint.setColor(Color.BLUE);
+            int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
+            float distParcourir=vitesseActuelle/10;
+            if (lastObstacle<mObstaclesX.size()-1 && Math.sqrt(((int)mObstaclesX.get(lastObstacle) - posX) ^ 2 + ((int)mObstaclesY.get(lastObstacle) - posY) ^ 2)<distParcourir)  {
+                distParcourir= (float) (vitesseActuelle/10-Math.sqrt(((int)mObstaclesX.get(lastObstacle) - posX) ^ 2 + ((int)mObstaclesY.get(lastObstacle) - posY) ^ 2));
+                lastObstacle+=1;
+            }
+            int x = (int) (((int) ((int)mObstaclesX.get(lastObstacle)+Math.cos(Math.atan2((int)mObstaclesY.get(lastObstacle+1)-(int)mObstaclesY.get(lastObstacle),(int)mObstaclesX.get(lastObstacle+1)-(int)mObstaclesX.get(lastObstacle)))/distParcourir - (int) Collections.min(mPointX)) * 304 / DeltaMax));
+            int y = (int) ((304 + ((int) Collections.min(mPointY) - ((int) mObstaclesY.get(lastObstacle)+Math.sin(Math.atan2((int)mObstaclesY.get(lastObstacle+1)-(int)mObstaclesY.get(lastObstacle),(int)mObstaclesX.get(lastObstacle+1)-(int)mObstaclesX.get(lastObstacle)))/distParcourir) * 304 / DeltaMax)));
+            cs.drawCircle(x, y, 3, paint);
+        }
+    }
+
+    public void demarrerCourse(View v){
+        time=System.currentTimeMillis();
+        while (lastObstacle<mObstaclesX.size()-1){
+            if (time-oldTime>100){
+                oldTime=time;
+                time=System.currentTimeMillis();
+                iv.setImageBitmap(bm);
+            }
+        }
     }
 }

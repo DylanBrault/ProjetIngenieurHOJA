@@ -13,7 +13,7 @@
         android:layout_height="55dp"
         android:layout_marginBottom="87dp"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:layout_constraintBottom_toTopOf="@+id/carte"
+        app:layout_constraintBottom_toTopOf="@+id/map"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <ImageView
-        android:id="@+id/carte"
+        android:id="@+id/map"
         android:layout_width="304dp"
         android:layout_height="304dp"
         android:layout_marginBottom="120dp"
@@ -50,9 +50,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Commencer la course"
+        android:onClick="demarrerCourse"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/carte" />
+        app:layout_constraintTop_toBottomOf="@+id/map" />
 
     <Button
         android:id="@+id/button6"
@@ -77,7 +78,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Choisir les paramètres de vitesse du cheval"
-        app:layout_constraintBottom_toTopOf="@+id/carte"
+        app:layout_constraintBottom_toTopOf="@+id/map"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />

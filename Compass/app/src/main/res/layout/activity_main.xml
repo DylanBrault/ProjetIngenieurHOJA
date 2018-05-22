@@ -31,7 +31,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:onClick="Credit"
-        android:text="Plus d'information ..." />
+        android:text="Plus d'informations ..." />
 
     <ImageView
         android:id="@+id/imageView3"
