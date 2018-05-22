@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -108,7 +110,8 @@ public class Carte extends AppCompatActivity {
                 // test
                 //int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / ((int) Collections.max(mPointX) - (int) Collections.min(mPointX)));
                 //int y = (int) ((304+((int) Collections.min(mPointY)- (int) mPointY.get(j)) * 304 / ((int) Collections.max(mPointY) - (int) Collections.min(mPointY))));
-                canvas.drawCircle(x, y,3, paint);
+                canvas.drawRect(x-5,y+5,x+15,y-5,new Paint(Color.WHITE));
+                canvas.drawText(i+"",(float)x+10,(float)y,new Paint(Color.BLUE));
             }
         }
         for (int p = 1; p < mNumerosObstacles.size(); p++) {
