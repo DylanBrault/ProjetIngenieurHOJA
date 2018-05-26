@@ -80,9 +80,45 @@ public class Carte extends AppCompatActivity {
         for (int j = 0; j < mPointX.size(); j++) {
             if (j == 0) {
                 paint.setColor(Color.RED);
+                int prevPointX=(int)mPointX.get(0);
+                int prevPointY=(int)mPointY.get(0);
+                int nextPointX=(int)mPointX.get(1);
+                int nextPointY=(int)mPointY.get(1);
+                Matrix matrix = new Matrix();
+                int angle= 90-(int) (Math.atan2(nextPointY-prevPointY,nextPointX-prevPointX)*360/(2*3.14));
+                matrix.postRotate(angle);
+                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.start);
+                Bitmap rotateIcon=Bitmap.createBitmap(icon,0,0,icon.getWidth(),icon.getHeight(),matrix,true);
+                int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
+                if ((int)Collections.max(mPointX)-(int)Collections.min(mPointX)==0 ||(int)Collections.max(mPointY)-(int)Collections.min(mPointY)==0){
+                    canvas.drawCircle(0, 304, 1, paint);
+                    paint.setColor(Color.BLACK);
+                }else {
+                    int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
+                    int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get(j)) * 304 / DeltaMax));
+                    canvas.drawBitmap(rotateIcon, null, new Rect(x - 25, y - 25, x + 25, y + 25), null);
+                }
             }
             if (j == mPointX.size() - 1) {
                 paint.setColor(Color.BLUE);
+                int prevPointX = (int) mPointX.get(mPointX.size() - 2);
+                int prevPointY = (int) mPointY.get(mPointX.size() - 2);
+                int nextPointX = (int) mPointX.get(mPointX.size() - 1);
+                int nextPointY = (int) mPointY.get(mPointX.size() - 1);
+                Matrix matrix = new Matrix();
+                int angle = 90 - (int) (Math.atan2(nextPointY - prevPointY, nextPointX - prevPointX) * 360 / (2 * 3.14));
+                matrix.postRotate(angle);
+                Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.finish);
+                Bitmap rotateIcon = Bitmap.createBitmap(icon, 0, 0, icon.getWidth(), icon.getHeight(), matrix, true);
+                int DeltaMax = Math.max((int) Collections.max(mPointX) - (int) Collections.min(mPointX), (int) Collections.max(mPointY) - (int) Collections.min(mPointY));
+                if ((int) Collections.max(mPointX) - (int) Collections.min(mPointX) == 0 || (int) Collections.max(mPointY) - (int) Collections.min(mPointY) == 0) {
+                    canvas.drawCircle(0, 304, 1, paint);
+                    paint.setColor(Color.BLACK);
+                } else {
+                    int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
+                    int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get(j)) * 304 / DeltaMax));
+                    canvas.drawBitmap(rotateIcon, null, new Rect(x - 25, y - 25, x + 25, y + 25), null);
+                }
             }
             //canvas.drawCircle(152 * facteur - (int) mPointY.get(j), 152 * facteur + (int) mPointX.get(j), 3, paint);
             //paint.setColor(Color.BLACK);
@@ -109,41 +145,76 @@ public class Carte extends AppCompatActivity {
             }else {
                 int x = (int) (((int) mObstaclesX.get(i) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                 int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mObstaclesY.get(i)) * 304 / DeltaMax));
-                // test
-                //int x = (int) (((int) mPointX.get(j) - (int) Collections.min(mPointX)) * 304 / ((int) Collections.max(mPointX) - (int) Collections.min(mPointX)));
-                //int y = (int) ((304+((int) Collections.min(mPointY)- (int) mPointY.get(j)) * 304 / ((int) Collections.max(mPointY) - (int) Collections.min(mPointY))));
-                paint.setColor(Color.WHITE);
-                //canvas.drawRect(x-5,y+15,x+15,y+5,paint);
-                paint.setColor(Color.BLUE);
-                canvas.drawText(i+1+"",(float)x-10,(float)y-10,paint);
                 if (typeObstacle==0) {
+                    int prevPointX=(int)mPointX.get((int)mNumerosObstacles.get(i)-1);
+                    int prevPointY=(int)mPointY.get((int)mNumerosObstacles.get(i)-1);
+                    int nextPointX=(int)mPointX.get((int)mNumerosObstacles.get(i)+1);
+                    int nextPointY=(int)mPointY.get((int)mNumerosObstacles.get(i)+1);
+                    Matrix matrix = new Matrix();
+                    int angle= 90-(int) (Math.atan2(nextPointY-prevPointY,nextPointX-prevPointX)*360/(2*3.14));
+                    matrix.postRotate(angle);
                     Bitmap icon = BitmapFactory.decodeResource(getResources(),R.drawable.droit);
-                    canvas.drawBitmap(icon,null, new Rect(x-25,y-25,x+25,y+25) , null);
+                    Bitmap rotateIcon=Bitmap.createBitmap(icon,0,0,icon.getWidth(),icon.getHeight(),matrix,true);
+                    canvas.drawBitmap(rotateIcon,null, new Rect(x-25,y-25,x+25,y+25) , null);
                 }else{
                     if (typeObstacle==1) {
+                        int prevPointX=(int)mPointX.get((int)mNumerosObstacles.get(i)-1);
+                        int prevPointY=(int)mPointY.get((int)mNumerosObstacles.get(i)-1);
+                        int nextPointX=(int)mPointX.get((int)mNumerosObstacles.get(i)+1);
+                        int nextPointY=(int)mPointY.get((int)mNumerosObstacles.get(i)+1);
+                        Matrix matrix = new Matrix();
+                        int angle= 90-(int) (Math.atan2(nextPointY-prevPointY,nextPointX-prevPointX)*360/(2*3.14));
+                        matrix.postRotate(angle);
                         Bitmap icon = BitmapFactory.decodeResource(getResources(),
                                 R.drawable.oxer);
-                        canvas.drawBitmap(icon,null, new Rect(x-25,y-25,x+25,y+25) , null);
+                        Bitmap rotateIcon=Bitmap.createBitmap(icon,0,0,icon.getWidth(),icon.getHeight(),matrix,true);
+                        canvas.drawBitmap(rotateIcon,null, new Rect(x-25,y-25,x+25,y+25) , null);
                     }else{
                         if (typeObstacle==2) {
+                            int prevPointX=(int)mPointX.get((int)mNumerosObstacles.get(i)-1);
+                            int prevPointY=(int)mPointY.get((int)mNumerosObstacles.get(i)-1);
+                            int nextPointX=(int)mPointX.get((int)mNumerosObstacles.get(i)+1);
+                            int nextPointY=(int)mPointY.get((int)mNumerosObstacles.get(i)+1);
+                            Matrix matrix = new Matrix();
+                            int angle= 90-(int) (Math.atan2(nextPointY-prevPointY,nextPointX-prevPointX)*360/(2*3.14));
+                            matrix.postRotate(angle);
                             Bitmap icon = BitmapFactory.decodeResource(getResources(),
                                     R.drawable.riviere);
-                            canvas.drawBitmap(icon,null, new Rect(x-25,y-25,x+25,y+25) , null);
+                            Bitmap rotateIcon=Bitmap.createBitmap(icon,0,0,icon.getWidth(),icon.getHeight(),matrix,true);
+                            canvas.drawBitmap(rotateIcon,null, new Rect(x-25,y-25,x+25,y+25) , null);
                         }else{
                             if (typeObstacle==3) {
+                                int prevPointX=(int)mPointX.get((int)mNumerosObstacles.get(i)-1);
+                                int prevPointY=(int)mPointY.get((int)mNumerosObstacles.get(i)-1);
+                                int nextPointX=(int)mPointX.get((int)mNumerosObstacles.get(i)+1);
+                                int nextPointY=(int)mPointY.get((int)mNumerosObstacles.get(i)+1);
+                                Matrix matrix = new Matrix();
+                                int angle= 90-(int) (Math.atan2(nextPointY-prevPointY,nextPointX-prevPointX)*360/(2*3.14));
+                                matrix.postRotate(angle);
                                 Bitmap icon = BitmapFactory.decodeResource(getResources(),
                                         R.drawable.obstacle_riviere);
-                                canvas.drawBitmap(icon,null, new Rect(x-25,y-25,x+25,y+25) , null);
+                                Bitmap rotateIcon=Bitmap.createBitmap(icon,0,0,icon.getWidth(),icon.getHeight(),matrix,true);
+                                canvas.drawBitmap(rotateIcon,null, new Rect(x-25,y-25,x+25,y+25) , null);
                             }else{
                                 if (typeObstacle==4) {
+                                    int prevPointX=(int)mPointX.get((int)mNumerosObstacles.get(i)-1);
+                                    int prevPointY=(int)mPointY.get((int)mNumerosObstacles.get(i)-1);
+                                    int nextPointX=(int)mPointX.get((int)mNumerosObstacles.get(i)+1);
+                                    int nextPointY=(int)mPointY.get((int)mNumerosObstacles.get(i)+1);
+                                    Matrix matrix = new Matrix();
+                                    int angle= 90-(int) (Math.atan2(nextPointY-prevPointY,nextPointX-prevPointX)*360/(2*3.14));
+                                    matrix.postRotate(angle);
                                     Bitmap icon = BitmapFactory.decodeResource(getResources(),
                                             R.drawable.triple);
-                                    canvas.drawBitmap(icon,null, new Rect(x-25,y-25,x+25,y+25) , null);
+                                    Bitmap rotateIcon=Bitmap.createBitmap(icon,0,0,icon.getWidth(),icon.getHeight(),matrix,true);
+                                    canvas.drawBitmap(rotateIcon,null, new Rect(x-25,y-25,x+25,y+25) , null);
                                 }
                             }
                         }
                     }
                 }
+                paint.setColor(Color.BLUE);
+                canvas.drawText(i+1+"",(float)x-10,(float)y-10,paint);
             }
         }
         for (int p = 1; p < mNumerosObstacles.size(); p++) {
@@ -185,6 +256,7 @@ public class Carte extends AppCompatActivity {
 
             }
         imageView.setImageBitmap(bitmap);
+
     /*
         ListView mListView2;
 
