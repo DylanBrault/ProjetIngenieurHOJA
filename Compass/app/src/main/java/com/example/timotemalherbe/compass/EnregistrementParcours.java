@@ -194,14 +194,16 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
 
         //Initialization of the ViewHolder
         mListView = findViewById(R.id.listView);
-        Obstacle oVerticaux=new Obstacle(R.drawable.droit,"Obstacles verticaux :","Constituants un plan vertical pouvant atteindre 1m60 de haut. Il existe différents types : droits, barrières, murs, palanques.",0);
-        Obstacle oLarges=new Obstacle(R.drawable.riviere,"Obstacles larges : ","Construits sur le plan horizontal et vertical. Ils peuvent être larges de 2m. Egalement, il existe plusieurs types : oxers, spas (en forme de A).",1);
-        Obstacle oVolee=new Obstacle(R.drawable.riviere,"Obstacles de volée : ","Ces obstacles souvent très larges nécessitent de la vitesse. Taille ? On distingue les rivières les bull-finches et certains spas.",2);
-        Obstacle oNaturels=new Obstacle(R.drawable.riviere,"Obstacles naturels : ","Ils sont propres au terrain et exploitent le relief de celui-ci. Ainsi, on peut rencontrer des bidets, des troncs, des trous, des talus, des contre hauts et contre bas.",3);
-        obstacles.add(oVerticaux);
-        obstacles.add(oLarges);
-        obstacles.add(oVolee);
-        obstacles.add(oNaturels);
+        Obstacle oDroits=new Obstacle(R.drawable.droit,"Obstacle droit","",0);
+        Obstacle oOxer=new Obstacle(R.drawable.oxer,"Obstacle oxer","",1);
+        Obstacle oRiviere=new Obstacle(R.drawable.riviere,"Obstacles rivière","",2);
+        Obstacle oObstacle_Riviere=new Obstacle(R.drawable.obstacle_riviere,"Obstacles + Rivière ","",3);
+        Obstacle oTriple=new Obstacle(R.drawable.triple,"Obstacle triple","",4);
+        obstacles.add(oDroits);
+        obstacles.add(oOxer);
+        obstacles.add(oRiviere);
+        obstacles.add(oObstacle_Riviere);
+        obstacles.add(oTriple);
         if (obstacles!=null){
             ObstacleViewAdapter adapter = new ObstacleViewAdapter(EnregistrementParcours.this, obstacles);
             mListView.setAdapter(adapter);

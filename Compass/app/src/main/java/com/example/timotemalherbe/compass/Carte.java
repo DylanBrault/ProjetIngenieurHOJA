@@ -2,8 +2,10 @@ package com.example.timotemalherbe.compass;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -114,6 +116,34 @@ public class Carte extends AppCompatActivity {
                 //canvas.drawRect(x-5,y+15,x+15,y+5,paint);
                 paint.setColor(Color.BLUE);
                 canvas.drawText(i+1+"",(float)x-10,(float)y-10,paint);
+                if (typeObstacle==0) {
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(),R.drawable.droit);
+                    canvas.drawBitmap(icon,null, new Rect(x-25,y-25,x+25,y+25) , null);
+                }else{
+                    if (typeObstacle==1) {
+                        Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                                R.drawable.oxer);
+                        canvas.drawBitmap(icon,null, new Rect(x-25,y-25,x+25,y+25) , null);
+                    }else{
+                        if (typeObstacle==2) {
+                            Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                                    R.drawable.riviere);
+                            canvas.drawBitmap(icon,null, new Rect(x-25,y-25,x+25,y+25) , null);
+                        }else{
+                            if (typeObstacle==3) {
+                                Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                                        R.drawable.obstacle_riviere);
+                                canvas.drawBitmap(icon,null, new Rect(x-25,y-25,x+25,y+25) , null);
+                            }else{
+                                if (typeObstacle==4) {
+                                    Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                                            R.drawable.triple);
+                                    canvas.drawBitmap(icon,null, new Rect(x-25,y-25,x+25,y+25) , null);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         for (int p = 1; p < mNumerosObstacles.size(); p++) {
