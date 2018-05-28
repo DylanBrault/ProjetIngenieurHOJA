@@ -123,7 +123,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
                 mNumerosObstacles.add(mXArrayList.size()-1);
                 AlertDialog.Builder alertDialogHauteur = new AlertDialog.Builder(EnregistrementParcours.this);
                 alertDialogHauteur.setTitle("Hauteur de l'obstacle");
-                alertDialogHauteur.setMessage("Veuillez saisir la hauteur de l'obstacle m");
+                alertDialogHauteur.setMessage("Veuillez saisir la hauteur de l'obstacle en m");
                 final EditText inputHauteur = new EditText(EnregistrementParcours.this);
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
