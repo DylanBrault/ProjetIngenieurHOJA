@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList mObstaclesX;
     ArrayList mObstaclesY;
     ArrayList mNumerosObstacles;
+    ArrayList mDistAppel;
     double stepLength;
     int nombreCouleursObstacles;
 
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_NUMEROSOBSTACLES = "com.example.timotemalherbe.NUMEROSOBSTACLES";
     public static final String EXTRA_DISTANCE="com.example.timotemalherbe.DISTANCE";
     public static final String EXTRA_OBSTACLESTYPESNBR="com.example.timotemalherbe.OBSTACLESTYPESNBR";
+    public static final String EXTRA_DISTANCEAPPEL="com.example.timotemalherbe.DISTANCEAPPEL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         nombreCouleursObstacles=intent.getIntExtra(Carte.EXTRA_OBSTACLESTYPESNBR,4);
         mNumerosObstacles = intent.getIntegerArrayListExtra(Carte.EXTRA_NUMEROSOBSTACLES);
         stepLength=intent.getDoubleExtra(Carte.EXTRA_DISTANCE,0.0);
+        mDistAppel=intent.getIntegerArrayListExtra(Carte.EXTRA_DISTANCEAPPEL);
         setContentView(R.layout.activity_main);
     }
 
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(EXTRA_NUMEROSOBSTACLES,mNumerosObstacles);
             intent.putExtra(EXTRA_DISTANCE,stepLength);
             intent.putExtra(EXTRA_OBSTACLESTYPESNBR,nombreCouleursObstacles);
+            intent.putExtra(EXTRA_DISTANCEAPPEL,mDistAppel);
             startActivity(intent);
         }
     }

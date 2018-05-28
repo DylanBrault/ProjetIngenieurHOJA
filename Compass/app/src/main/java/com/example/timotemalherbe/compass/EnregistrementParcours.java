@@ -50,6 +50,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
     ArrayList mTypeObstacles;
     List<Obstacle> obstacles = new ArrayList<Obstacle>();
     ArrayList mNumerosObstacles;
+    ArrayList mDistAppel;
 
     // Champs de capteurs
     private SensorManager mSensorManager;
@@ -71,7 +72,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
     public static final String EXTRA_NUMEROSOBSTACLES = "com.example.timotemalherbe.NUMEROSOBSTACLES";
     public static final String EXTRA_OBSTACLESTYPESNBR="com.example.timotemalherbe.OBSTACLESTYPESNBR";
     public static final String EXTRA_DISTANCE="com.example.timotemalherbe.DISTANCE";
-    //TextView tvHeading;
+    public static final String EXTRA_DISTANCEAPPEL="com.example.timotemalherbe.DISTANCEAPPEL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         //Initialisation de la longueur d'un pas par popup
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(EnregistrementParcours.this);
         alertDialog.setTitle("Longueur de pas");
-        alertDialog.setMessage("Entrez la longueur moyenne de pas");
+        alertDialog.setMessage("Entrez la longueur moyenne de pas en cm");
 
         final EditText input = new EditText(EnregistrementParcours.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
@@ -109,15 +110,35 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         mObstaclesY=new ArrayList();
         mTypeObstacles=new ArrayList();
         mNumerosObstacles=new ArrayList();
+        mDistAppel=new ArrayList();
         mListView=findViewById(R.id.listView);
         mListView.setClickable(true);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                enReconnaissance=false;
                 mTypeObstacles.add(obstacles.get(i).getTypeObstacleInt());
                 mObstaclesX.add(x);
                 mObstaclesY.add(y);
                 mNumerosObstacles.add(mXArrayList.size()-1);
+                AlertDialog.Builder alertDialogHauteur = new AlertDialog.Builder(EnregistrementParcours.this);
+                alertDialogHauteur.setTitle("Hauteur de l'obstacle");
+                alertDialogHauteur.setMessage("Veuillez saisir la hauteur de l'obstacle m");
+                final EditText inputHauteur = new EditText(EnregistrementParcours.this);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                inputHauteur.setLayoutParams(lp);
+                alertDialogHauteur.setView(inputHauteur);
+                alertDialogHauteur.setNeutralButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mDistAppel.add((int)(2*Double.parseDouble(inputHauteur.getText().toString())));
+                                enReconnaissance=true;
+                            }
+                        }
+                );
+                alertDialogHauteur.show();
             }
         });
 
@@ -161,22 +182,6 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         }
 
         int i=1;
-        /*
-        //Create a unique new file to store data
-        boolean unique = false;
-        String name;
-
-        File dir = new File (String.valueOf(path));
-        for (File f : dir.listFiles()) {
-            if (f.isFile()) {
-                name = f.getName();
-                if (name != "New"+i) {
-                    unique=true;
-                    break;
-                }
-                i++;
-            }
-        }*/
 
         myfile = new File(path,"New"+i+".txt");
 
@@ -187,9 +192,6 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
             Log.e("Exception", "File creation failed: " + e.toString());
         }
 
-
-        //Démarrer l'activité reconnaissance et envoyer les données dans writeToFile(String data)
-        //writeToFile(data);
 
 
         //Initialization of the ViewHolder
@@ -219,15 +221,15 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
             nombrePas += 1;
             nbrPas.setText("Nombre de pas : " + nombrePas);
             distTot+=stepLength;
-            distance.setText("Distance totale parcourue : "+ distTot);
+            distance.setText("Distance totale parcourue en cm: "+ distTot);
             pasDetecte=true;
 
         }
         if (sensor.getType() == Sensor.TYPE_ORIENTATION){
-            boussoleTV.setText("Angle : "+Math.round(event.values[0]));
+            boussoleTV.setText("Angle en degrés : "+Math.round(event.values[0]));
         }
         if (sensor.getType() == Sensor.TYPE_ORIENTATION && pasDetecte) {
-            boussoleTV.setText("Angle : " + Math.round(event.values[0]));
+            boussoleTV.setText("Angle en degrés : " + Math.round(event.values[0]));
             float angle = event.values[0];
             mAngles.add(event.values[0]);
             // x = (int) (x + Math.cos((event.values[0]- (float) mAngles.get(0))*2*Math.PI/360) * dist);
@@ -303,6 +305,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         intent.putExtra(EXTRA_OBSTACLESTYPESNBR,obstacles.size());
         intent.putExtra(EXTRA_NUMEROSOBSTACLES,mNumerosObstacles);
         intent.putExtra(EXTRA_DISTANCE,stepLength);
+        intent.putExtra(EXTRA_DISTANCEAPPEL,mDistAppel);
         startActivity(intent);
     }
 

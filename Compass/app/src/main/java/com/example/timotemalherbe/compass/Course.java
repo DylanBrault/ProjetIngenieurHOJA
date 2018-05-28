@@ -41,7 +41,6 @@ public class Course extends AppCompatActivity {
     public static final String EXTRA_OBSTACLESTYPESNBR="com.example.timotemalherbe.OBSTACLESTYPESNBR";
 
     int foulee;
-    int distAppel;
     double positionActuelle;
     ArrayList mRalentissementDist;
     ArrayList mAccelerationDist;
@@ -57,6 +56,7 @@ public class Course extends AppCompatActivity {
     ArrayList mObstaclesY;
     ArrayList mObstaclesCouleurs;
     ArrayList mNumerosObstacles;
+    ArrayList mDistAppel;
     int nombreCouleursObstacles; // Nombre de types d'obstacles différents
 
     double stepLength;
@@ -91,10 +91,10 @@ public class Course extends AppCompatActivity {
         int nombreCouleursObstacles = intent.getIntExtra(MainActivity.EXTRA_OBSTACLESTYPESNBR, 4);
         mNumerosObstacles = intent.getIntegerArrayListExtra(MainActivity.EXTRA_NUMEROSOBSTACLES);
         stepLength = intent.getDoubleExtra(MainActivity.EXTRA_DISTANCE, 0.0);
+        mDistAppel=intent.getIntegerArrayListExtra(MainActivity.EXTRA_DISTANCEAPPEL);
 
         // On initialise les variables pour le tracé de la carte :
         foulee = 4;
-        distAppel = 2;
         time = 0;
         oldTime = 0;
         lastObstacle = 0;
@@ -105,7 +105,7 @@ public class Course extends AppCompatActivity {
         posRal = 0;
         vitesseNormale = 24.5 * 0.0277; // 24.5 km/h en cm/ms
         vitesseLente = 22 * 0.0277;// 22 km/h en cm/ms
-        vitesseAcceleration = 11 *0.0277;// 27 km/h en cm/ms
+        vitesseAcceleration = 27 *0.0277;// 27 km/h en cm/ms
         sonnerie = false;
         mObstaclesCouleurs = new ArrayList();
         mRalentissementDist = new ArrayList();
@@ -297,14 +297,15 @@ public class Course extends AppCompatActivity {
 
         // Tracé des zones de reprise et accéleration
         for (int p = 1; p < mNumerosObstacles.size(); p++) { // Pour tous les obstacles
+            int distAppel= (int) mDistAppel.get(p);
             int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
             int distObst= (int) Math.round(((int) mNumerosObstacles.get(p)-(int) mNumerosObstacles.get(p-1))*stepLength/100);
             if ((distObst-(distAppel))%foulee==1){ // On accélère
                 paint.setColor(Color.GREEN); //On fixe à vert la couleur du pinceau
 
-                // On parcourt les 5 points précedents l'obstacle actuel
-                if ((int)mNumerosObstacles.get(p)-5>0) { // On accélere avant l'obstacle
-                    for (int k=1;k<=5;k++) {
+                // On parcourt les 4=distAppel/2 points précedents l'obstacle actuel
+                if ((int)mNumerosObstacles.get(p)-(4+distAppel/2)>0) { // On accélere avant l'obstacle
+                    for (int k=1;k<=(4+distAppel/2);k++) {
                         int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p) - k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                         int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p) - k)) * 304 / DeltaMax));
                         canvas.drawCircle(x, y, 1, paint);
@@ -313,11 +314,11 @@ public class Course extends AppCompatActivity {
                     mAccelerationDist.add((int) mNumerosObstacles.get(p) * stepLength);
                 }
             }else{
-                // On parcourt les 9 points suivant l'obstacle précedent
+                // On parcourt les 8+distAppel/2 points suivant l'obstacle précedent
                 if ((distObst-distAppel)%foulee==2){ // On ralentit sur 2 foulees
                     paint.setColor(Color.RED);
-                    if ((int)mNumerosObstacles.get(p-1)+9<(int)mNumerosObstacles.get(p)){
-                        for (int k=1;k<=9;k++) {
+                    if ((int)mNumerosObstacles.get(p-1)+(8+distAppel/2)<(int)mNumerosObstacles.get(p)){
+                        for (int k=1;k<=(8+distAppel/2);k++) {
                             int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p-1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                             int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p-1) + k)) * 304 / DeltaMax));
                             canvas.drawCircle(x, y, 1, paint);
@@ -326,11 +327,11 @@ public class Course extends AppCompatActivity {
                         mRalentissementDist.add(((int) mNumerosObstacles.get(p) + 9) * stepLength);
                     }
                 }else{
-                    // On parcourt les 5 points suivant l'obstacle précedent
+                    // On parcourt les 4+distAppel/2 points suivant l'obstacle précedent
                     if ((distObst-distAppel)%foulee==3){ // On ralentit sur 1 foulee
                         paint.setColor(Color.RED);
-                        if ((int)mNumerosObstacles.get(p-1)+5<(int)mNumerosObstacles.get(p)) {
-                            for (int k=1;k<=5;k++) {
+                        if ((int)mNumerosObstacles.get(p-1)+(4+distAppel/2)<(int)mNumerosObstacles.get(p)) {
+                            for (int k=1;k<=(4+distAppel);k++) {
                                 int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p-1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                                 int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p-1) + k)) * 304 / DeltaMax));
                                 canvas.drawCircle(x, y, 1, paint);
@@ -428,7 +429,7 @@ public class Course extends AppCompatActivity {
     public void modifVitesse(View v){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Course.this);
         alertDialog.setTitle("Vitesse lente");
-        alertDialog.setMessage("Entrez la vitesse lente : ");
+        alertDialog.setMessage("Entrez la vitesse lente en km/h : ");
         final EditText input = new EditText(Course.this);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -442,7 +443,7 @@ public class Course extends AppCompatActivity {
                         vitesseLente=Double.parseDouble(input.getText().toString())* 0.0277;
                         AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(Course.this);
                         alertDialog2.setTitle("Vitesse moyenne");
-                        alertDialog2.setMessage("Entrez la vitesse moyenne : ");
+                        alertDialog2.setMessage("Entrez la vitesse moyenne en km/h : ");
                         final EditText input2 = new EditText(Course.this);
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -455,7 +456,7 @@ public class Course extends AppCompatActivity {
                                         vitesseNormale=Double.parseDouble(input2.getText().toString())* 0.0277;
                                         AlertDialog.Builder alertDialog3 = new AlertDialog.Builder(Course.this);
                                         alertDialog3.setTitle("Vitesse rapide");
-                                        alertDialog3.setMessage("Entrez la vitesse rapide : ");
+                                        alertDialog3.setMessage("Entrez la vitesse rapide en km/h : ");
                                         final EditText input3 = new EditText(Course.this);
                                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                                                 LinearLayout.LayoutParams.MATCH_PARENT,

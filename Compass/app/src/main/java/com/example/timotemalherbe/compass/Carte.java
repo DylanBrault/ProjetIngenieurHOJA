@@ -33,9 +33,9 @@ public class Carte extends AppCompatActivity {
     public static final String EXTRA_NUMEROSOBSTACLES = "com.example.timotemalherbe.NUMEROSOBSTACLES";
     public static final String EXTRA_DISTANCE="com.example.timotemalherbe.DISTANCE";
     public static final String EXTRA_OBSTACLESTYPESNBR="com.example.timotemalherbe.OBSTACLESTYPESNBR";
+    public static final String EXTRA_DISTANCEAPPEL="com.example.timotemalherbe.DISTANCEAPPEL";
 
     int foulee; // Taille d'une foulée de cheval
-    int distAppel;
 
     ArrayList mPointX; // Tableau contenant les coordonnées en X de la trajectoire
     ArrayList mPointY; // Tableau contenant les coordonnées en Y de la trajectoire
@@ -44,6 +44,7 @@ public class Carte extends AppCompatActivity {
     ArrayList mObstaclesY; // Tableau contenant les coordonnées en Y des obstacles
     ArrayList mObstaclesCouleurs; // Tableau contenant la couleur des types d'obstacle
     ArrayList mNumerosObstacles; // Tableau indiquant le point de la trajectoire correspondant à l'obstacle
+    ArrayList mDistAppel; // Tableau des distances d'appel
     double stepLength; // Taille d'un pas
     int nombreCouleursObstacles; // Nombre de types d'obstacles différents
 
@@ -62,10 +63,10 @@ public class Carte extends AppCompatActivity {
         nombreCouleursObstacles=intent.getIntExtra(EnregistrementParcours.EXTRA_OBSTACLESTYPESNBR,4);
         mNumerosObstacles = intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_NUMEROSOBSTACLES);
         stepLength=intent.getDoubleExtra(EnregistrementParcours.EXTRA_DISTANCE,0.0);
+        mDistAppel=intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_DISTANCEAPPEL);
 
         // On initialise les variables nécessaires au tracé
         foulee=4; // Une foulée de cheval est de 4 mètres
-        distAppel=2;
 
         // On construit le tableau de couleur des obstacles (une couleur aléatoire sera utilisé pour les obstacles personalisés qui n'ont pas d'icônes
         mObstaclesCouleurs = new ArrayList();
@@ -256,37 +257,38 @@ public class Carte extends AppCompatActivity {
 
         // Tracé des zones de reprise et accéleration
         for (int p = 1; p < mNumerosObstacles.size(); p++) { // Pour tous les obstacles
+            int distAppel= (int) mDistAppel.get(p);
             int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
             int distObst= (int) Math.round(((int) mNumerosObstacles.get(p)-(int) mNumerosObstacles.get(p-1))*stepLength/100);
             if ((distObst-(distAppel))%foulee==1){ // On accélère
                 paint.setColor(Color.GREEN); //On fixe à vert la couleur du pinceau
 
-                // On parcourt les 5 points précedents l'obstacle actuel
-                if ((int)mNumerosObstacles.get(p)-5>0) { // On accélere avant l'obstacle
-                    for (int k=1;k<=5;k++) {
-                        int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p) - k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
-                        int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p) - k)) * 304 / DeltaMax));
+                // On parcourt les 4+distAppel/2 points précedents l'obstacle actuel
+                if ((int)mNumerosObstacles.get(p)-(4+distAppel/2)>0) { // On accélere avant l'obstacle
+                    for (int k=1;k<=(4+distAppel/2);k++) {
+                        int x = (((int) mPointX.get((Integer) mNumerosObstacles.get(p) - k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
+                        int y = ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p) - k)) * 304 / DeltaMax));
                         canvas.drawCircle(x, y, 1, paint);
                     }
                 }
             }else{
 
-                // On parcourt les 9 points suivant l'obstacle précedent
+                // On parcourt les 8+distAppel/2 points suivant l'obstacle précedent
                 if ((distObst-distAppel)%foulee==2){ // On ralentit sur 2 foulees
                     paint.setColor(Color.RED);
-                    if ((int)mNumerosObstacles.get(p-1)+9<(int)mNumerosObstacles.get(p)){
-                        for (int k=1;k<=9;k++) {
+                    if ((int)mNumerosObstacles.get(p-1)+(8+distAppel/2)<(int)mNumerosObstacles.get(p)){
+                        for (int k=1;k<=(8+distAppel/2);k++) {
                             int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p-1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                             int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p-1) + k)) * 304 / DeltaMax));
                             canvas.drawCircle(x, y, 1, paint);
                         }
                     }
                 }else{
-                    // On parcourt les 5 points suivant l'obstacle précedent
+                    // On parcourt les 4+disAppel/2 points suivant l'obstacle précedent
                     if ((distObst-distAppel)%foulee==3){ // On ralentit sur 1 foulee
                         paint.setColor(Color.RED);
-                        if ((int)mNumerosObstacles.get(p-1)+5<(int)mNumerosObstacles.get(p)) {
-                            for (int k=1;k<=5;k++) {
+                        if ((int)mNumerosObstacles.get(p-1)+(4+distAppel/2)<(int)mNumerosObstacles.get(p)) {
+                            for (int k=1;k<=(4+distAppel/2);k++) {
                                 int x = (int) (((int) mPointX.get((Integer) mNumerosObstacles.get(p-1) + k) - (int) Collections.min(mPointX)) * 304 / DeltaMax);
                                 int y = (int) ((304 + ((int) Collections.min(mPointY) - (int) mPointY.get((Integer) mNumerosObstacles.get(p-1) + k)) * 304 / DeltaMax));
                                 canvas.drawCircle(x, y, 1, paint);
@@ -312,6 +314,7 @@ public class Carte extends AppCompatActivity {
         intent.putExtra(EXTRA_NUMEROSOBSTACLES,mNumerosObstacles);
         intent.putExtra(EXTRA_DISTANCE,stepLength);
         intent.putExtra(EXTRA_OBSTACLESTYPESNBR,nombreCouleursObstacles);
+        intent.putExtra(EXTRA_DISTANCEAPPEL,mDistAppel);
         startActivity(intent);
     }
 }
