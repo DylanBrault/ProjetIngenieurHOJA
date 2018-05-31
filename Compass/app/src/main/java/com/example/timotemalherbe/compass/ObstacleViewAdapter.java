@@ -10,10 +10,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by timotemalherbe on 21/04/2018.
- */
-
 public class ObstacleViewAdapter extends ArrayAdapter<Obstacle> {
 
     public ObstacleViewAdapter(Context context, List<Obstacle> obstacles) {

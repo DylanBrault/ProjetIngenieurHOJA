@@ -11,6 +11,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -50,7 +51,7 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
     ArrayList mTypeObstacles;
     List<Obstacle> obstacles = new ArrayList<Obstacle>();
     ArrayList mNumerosObstacles;
-    ArrayList mDistAppel;
+    int mDistAppel;
 
     // Champs de capteurs
     private SensorManager mSensorManager;
@@ -81,16 +82,13 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         //tvHeading = (TextView) findViewById(R.id.textView);
         enReconnaissance=false;
 
-        //afficher le clavier automatiquement
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-
         //Initialisation de la longueur d'un pas par popup
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(EnregistrementParcours.this);
         alertDialog.setTitle("Longueur de pas");
         alertDialog.setMessage("Entrez la longueur moyenne de pas en cm");
 
         final EditText input = new EditText(EnregistrementParcours.this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
@@ -101,6 +99,23 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         stepLength = Double.parseDouble(input.getText().toString());
+                        AlertDialog.Builder alertDialogHauteur = new AlertDialog.Builder(EnregistrementParcours.this);
+                        alertDialogHauteur.setTitle("Hauteur des obstacles");
+                        alertDialogHauteur.setMessage("Veuillez saisir la hauteur des obstacles en m");
+                        final EditText inputHauteur = new EditText(EnregistrementParcours.this);
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.MATCH_PARENT);
+                        inputHauteur.setLayoutParams(lp);
+                        alertDialogHauteur.setView(inputHauteur);
+                        alertDialogHauteur.setNeutralButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        mDistAppel=(int)(2*Double.parseDouble(inputHauteur.getText().toString()));
+                                    }
+                                }
+                        );
+                        alertDialogHauteur.show();
                     }
                 });
         alertDialog.show();
@@ -110,7 +125,6 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         mObstaclesY=new ArrayList();
         mTypeObstacles=new ArrayList();
         mNumerosObstacles=new ArrayList();
-        mDistAppel=new ArrayList();
         mListView=findViewById(R.id.listView);
         mListView.setClickable(true);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -122,18 +136,11 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
                 mObstaclesY.add(y);
                 mNumerosObstacles.add(mXArrayList.size()-1);
                 AlertDialog.Builder alertDialogHauteur = new AlertDialog.Builder(EnregistrementParcours.this);
-                alertDialogHauteur.setTitle("Hauteur de l'obstacle");
-                alertDialogHauteur.setMessage("Veuillez saisir la hauteur de l'obstacle en m");
-                final EditText inputHauteur = new EditText(EnregistrementParcours.this);
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT);
-                inputHauteur.setLayoutParams(lp);
-                alertDialogHauteur.setView(inputHauteur);
+                alertDialogHauteur.setTitle("Passage de l'obstacle");
+                alertDialogHauteur.setMessage("Veuillez appuyer sur OK lorsque l'obstacle est franchi");
                 alertDialogHauteur.setNeutralButton("OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                mDistAppel.add((int)(2*Double.parseDouble(inputHauteur.getText().toString())));
                                 enReconnaissance=true;
                             }
                         }
@@ -198,9 +205,9 @@ public class EnregistrementParcours extends AppCompatActivity implements SensorE
         mListView = findViewById(R.id.listView);
         Obstacle oDroits=new Obstacle(R.drawable.droit,"Obstacle droit","",0);
         Obstacle oOxer=new Obstacle(R.drawable.oxer,"Obstacle oxer","",1);
-        Obstacle oRiviere=new Obstacle(R.drawable.riviere,"Obstacles rivière","",2);
-        Obstacle oObstacle_Riviere=new Obstacle(R.drawable.obstacle_riviere,"Obstacles + Rivière ","",3);
-        Obstacle oTriple=new Obstacle(R.drawable.triple,"Obstacle triple","",4);
+        Obstacle oRiviere=new Obstacle(R.drawable.riviere,"Obstacle rivière","",2);
+        Obstacle oObstacle_Riviere=new Obstacle(R.drawable.obstacle_riviere,"Obstacle + Rivière ","",3);
+        Obstacle oTriple=new Obstacle(R.drawable.triple,"Obstacle polonais","",4);
         obstacles.add(oDroits);
         obstacles.add(oOxer);
         obstacles.add(oRiviere);

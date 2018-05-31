@@ -44,7 +44,7 @@ public class Carte extends AppCompatActivity {
     ArrayList mObstaclesY; // Tableau contenant les coordonnées en Y des obstacles
     ArrayList mObstaclesCouleurs; // Tableau contenant la couleur des types d'obstacle
     ArrayList mNumerosObstacles; // Tableau indiquant le point de la trajectoire correspondant à l'obstacle
-    ArrayList mDistAppel; // Tableau des distances d'appel
+    int mDistAppel; // Distances d'appel
     double stepLength; // Taille d'un pas
     int nombreCouleursObstacles; // Nombre de types d'obstacles différents
 
@@ -63,7 +63,7 @@ public class Carte extends AppCompatActivity {
         nombreCouleursObstacles=intent.getIntExtra(EnregistrementParcours.EXTRA_OBSTACLESTYPESNBR,4);
         mNumerosObstacles = intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_NUMEROSOBSTACLES);
         stepLength=intent.getDoubleExtra(EnregistrementParcours.EXTRA_DISTANCE,0.0);
-        mDistAppel=intent.getIntegerArrayListExtra(EnregistrementParcours.EXTRA_DISTANCEAPPEL);
+        mDistAppel=intent.getIntExtra(EnregistrementParcours.EXTRA_DISTANCEAPPEL,2);
 
         // On initialise les variables nécessaires au tracé
         foulee=4; // Une foulée de cheval est de 4 mètres
@@ -257,7 +257,7 @@ public class Carte extends AppCompatActivity {
 
         // Tracé des zones de reprise et accéleration
         for (int p = 1; p < mNumerosObstacles.size(); p++) { // Pour tous les obstacles
-            int distAppel= (int) mDistAppel.get(p);
+            int distAppel= (int) mDistAppel;
             int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
             int distObst= (int) Math.round(((int) mNumerosObstacles.get(p)-(int) mNumerosObstacles.get(p-1))*stepLength/100);
             if ((distObst-(distAppel))%foulee==1){ // On accélère

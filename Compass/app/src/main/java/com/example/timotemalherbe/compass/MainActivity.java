@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList mObstaclesX;
     ArrayList mObstaclesY;
     ArrayList mNumerosObstacles;
-    ArrayList mDistAppel;
+    int mDistAppel;
     double stepLength;
     int nombreCouleursObstacles;
 
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
         nombreCouleursObstacles=intent.getIntExtra(Carte.EXTRA_OBSTACLESTYPESNBR,4);
         mNumerosObstacles = intent.getIntegerArrayListExtra(Carte.EXTRA_NUMEROSOBSTACLES);
         stepLength=intent.getDoubleExtra(Carte.EXTRA_DISTANCE,0.0);
-        mDistAppel=intent.getIntegerArrayListExtra(Carte.EXTRA_DISTANCEAPPEL);
+        mDistAppel=intent.getIntExtra(Carte.EXTRA_DISTANCEAPPEL,2);
         setContentView(R.layout.activity_main);
     }
 

@@ -56,7 +56,7 @@ public class Course extends AppCompatActivity {
     ArrayList mObstaclesY;
     ArrayList mObstaclesCouleurs;
     ArrayList mNumerosObstacles;
-    ArrayList mDistAppel;
+    int mDistAppel;
     int nombreCouleursObstacles; // Nombre de types d'obstacles différents
 
     double stepLength;
@@ -91,7 +91,7 @@ public class Course extends AppCompatActivity {
         int nombreCouleursObstacles = intent.getIntExtra(MainActivity.EXTRA_OBSTACLESTYPESNBR, 4);
         mNumerosObstacles = intent.getIntegerArrayListExtra(MainActivity.EXTRA_NUMEROSOBSTACLES);
         stepLength = intent.getDoubleExtra(MainActivity.EXTRA_DISTANCE, 0.0);
-        mDistAppel=intent.getIntegerArrayListExtra(MainActivity.EXTRA_DISTANCEAPPEL);
+        mDistAppel=intent.getIntExtra(MainActivity.EXTRA_DISTANCEAPPEL,2);
 
         // On initialise les variables pour le tracé de la carte :
         foulee = 4;
@@ -297,7 +297,7 @@ public class Course extends AppCompatActivity {
 
         // Tracé des zones de reprise et accéleration
         for (int p = 1; p < mNumerosObstacles.size(); p++) { // Pour tous les obstacles
-            int distAppel= (int) mDistAppel.get(p);
+            int distAppel= (int) mDistAppel;
             int DeltaMax = Math.max((int)Collections.max(mPointX)-(int)Collections.min(mPointX),(int)Collections.max(mPointY)-(int)Collections.min(mPointY));
             int distObst= (int) Math.round(((int) mNumerosObstacles.get(p)-(int) mNumerosObstacles.get(p-1))*stepLength/100);
             if ((distObst-(distAppel))%foulee==1){ // On accélère
